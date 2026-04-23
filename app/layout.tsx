@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { CustomCursor } from "@/components/CustomCursor";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { AmbientShapes } from "@/components/AmbientShapes";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -120,6 +121,7 @@ export default function RootLayout({
         </a>
         <Nav />
         <ScrollProgress />
+        <AmbientShapes />
         <main id="main" className="flex-1">
           <PageTransition>{children}</PageTransition>
         </main>
