@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { CustomCursor } from "@/components/CustomCursor";
+import { ScrollProgress } from "@/components/ScrollProgress";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -118,6 +119,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <Nav />
+        <ScrollProgress />
         <main id="main" className="flex-1">
           <PageTransition>{children}</PageTransition>
         </main>

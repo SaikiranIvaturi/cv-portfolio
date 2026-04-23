@@ -92,7 +92,7 @@ export function Nav() {
               </li>
             );
           })}
-          <li>
+          <li className="flex items-center">
             <ThemeToggle />
           </li>
         </ul>

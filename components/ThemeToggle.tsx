@@ -28,7 +28,7 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="relative w-4 h-4 text-[var(--ink-subtle)] hover:text-[var(--ink)] transition-colors"
+      className="relative flex items-center justify-center w-4 h-4 pb-1 text-[var(--ink-subtle)] hover:text-[var(--ink)] transition-colors"
     >
       <AnimatePresence mode="wait" initial={false}>
         {isDark ? (

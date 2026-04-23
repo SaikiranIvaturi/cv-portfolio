@@ -10,8 +10,8 @@ const experience = [
     period: "Feb 2023 – Present",
     location: "Gurugram, India",
     bullets: [
-      "Frontend lead on ECAP-Elevate — unified five siloed reporting surfaces into a single authenticated platform for Elevance Health operations teams. Built the application shell, Okta OIDC with idle session detection and automatic token refresh, and role-based access across admin, analyst, and executive tiers. Platform tracks a $5.1B cost-of-care savings target across 4.55M member months.",
-      "Frontend lead on Cost of Care AI — built data-intensive dashboards displaying cost trends, utilisation metrics, and AI-generated insights. Managed global state with Redux Toolkit, handling asynchronous API calls and large datasets, and integrated AI-driven APIs translating complex data into intuitive visual experiences.",
+      "Software Engineer II on ECAP-Elevate — unified five siloed reporting surfaces into a single authenticated platform for Elevance Health operations teams. Built the application shell, Okta OIDC with idle session detection and automatic token refresh, and role-based access across admin, analyst, and executive tiers.",
+      "Software Engineer II on Cost of Care AI — built data-intensive dashboards displaying cost trends, utilisation metrics, and AI-generated insights. Managed global state with Redux Toolkit, handling asynchronous API calls and large datasets, and integrated AI-driven APIs translating complex data into intuitive visual experiences.",
       "Led frontend on DEVA — designed component architecture, established coding standards, and integrated Okta OIDC auth. Delivered a 92% improvement in cut submission processing speed (7,000 cuts in 110 minutes) and a 90% reduction in data load times.",
       "Established team-wide patterns for role-based access control, API error handling, and reusable component libraries following DRY principles.",
       "Mentored junior engineers; contributed to sprint planning, estimations, and Agile ceremonies.",

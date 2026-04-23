@@ -186,3 +186,16 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ─── Marquee / tech ticker ─── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+.marquee-track:hover .animate-marquee {
+  animation-play-state: paused;
+}

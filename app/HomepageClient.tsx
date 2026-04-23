@@ -21,6 +21,46 @@ interface Props {
   writing: WritingPost[];
 }
 
+const STACK = [
+  "React 19",
+  "TypeScript",
+  "Redux Toolkit",
+  "React Query",
+  "Framer Motion",
+  "Vite",
+  "Tailwind CSS",
+  "Okta OIDC",
+  "Recharts",
+  "Chart.js",
+  "MUI",
+  "Vitest",
+  "Playwright",
+  "Python FastAPI",
+  "Next.js",
+];
+
+function StackMarquee() {
+  const items = [...STACK, ...STACK]; // doubled for seamless loop
+  return (
+    <div
+      aria-hidden="true"
+      className="marquee-track overflow-hidden -mx-6 px-0 select-none"
+    >
+      <div className="animate-marquee flex gap-0 whitespace-nowrap">
+        {items.map((tech, i) => (
+          <span
+            key={i}
+            className="inline-flex items-center gap-4 font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.1em] text-[var(--ink-subtle)] px-5"
+          >
+            {tech}
+            <span className="text-[var(--accent)] text-[8px]">✦</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Word-split animated paragraph ───
 function AnimatedIntro({ text }: { text: string }) {
   const prefersReducedMotion = useReducedMotion();
@@ -73,8 +113,6 @@ export function HomepageClient({ work, writing }: Props) {
     ? fadeUpReduced
     : fadeUp;
 
-  // Before mount: render at final state (no animation) to avoid hydration flash.
-  // After mount: only animate if first visit this session.
   const initialState = !mounted || !shouldAnimate ? false : "hidden";
 
   return (
@@ -93,11 +131,30 @@ export function HomepageClient({ work, writing }: Props) {
         {/* ── Intro ── */}
         <motion.section
           variants={prefersReducedMotion ? fadeUpReduced : wordStaggerContainer}
-          className="pt-20 pb-20 max-w-[720px]"
+          className="pt-20 pb-20 max-w-[720px] relative"
           aria-label="Introduction"
         >
+          {/* Ambient glow behind hero text */}
+          <div
+            aria-hidden="true"
+            className="absolute -top-10 -left-10 w-[420px] h-[260px] rounded-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse at 30% 40%, var(--accent-soft) 0%, transparent 70%)",
+              filter: "blur(40px)",
+              opacity: 0.6,
+            }}
+          />
           <AnimatedIntro text="I'm Saikiran — a frontend engineer who builds product interfaces that are fast, accessible, and easy to use. I work in React and TypeScript, mostly on tools where the data is complex and the users are busy." />
         </motion.section>
+
+        {/* ── Tech stack marquee ── */}
+        <motion.div
+          variants={sectionVariant}
+          className="mb-24 py-4 border-y border-[var(--rule)]"
+        >
+          <StackMarquee />
+        </motion.div>
 
         {/* ── Currently ── */}
         <motion.section
@@ -107,15 +164,20 @@ export function HomepageClient({ work, writing }: Props) {
         >
           <h2
             id="currently-heading"
-            className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.1em] text-[var(--accent)] mb-3"
+            className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.1em] text-[var(--accent)] mb-3 flex items-center gap-2"
           >
+            {/* Pulsing live dot */}
+            <span className="relative flex h-[7px] w-[7px] shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-60" />
+              <span className="relative inline-flex rounded-full h-[7px] w-[7px] bg-[var(--accent)]" />
+            </span>
             Currently
           </h2>
           <p className="font-[family-name:var(--font-inter-tight)] text-[16px] text-[var(--ink)] leading-[1.7] m-0">
-            Frontend lead on ECAP-Elevate and Cost of Care AI at Carelon &mdash;
-            internal platforms for clinical analytics and care-management
-            workflows. Heavy state, role-based access, complex data made
-            legible.
+            Software Engineer II on ECAP-Elevate and Cost of Care AI at Carelon
+            &mdash; internal platforms for clinical analytics and
+            care-management workflows. Heavy state, role-based access, complex
+            data made legible.
           </p>
         </motion.section>
 
