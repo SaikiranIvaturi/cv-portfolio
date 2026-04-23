@@ -120,7 +120,7 @@ export function CVClient() {
               Summary
             </h2>
             <p className="font-[family-name:var(--font-inter-tight)] text-[16px] text-[var(--ink)] leading-[1.7]">
-              Frontend engineer with 4+ years building production systems in
+              Frontend engineer with 5+ years building production systems in
               React, Redux, and TypeScript. Currently at Carelon Global
               Solutions (Elevance Health), leading frontend development on
               healthcare AI and data tooling. Strong on component architecture,

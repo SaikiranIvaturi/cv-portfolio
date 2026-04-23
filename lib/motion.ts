@@ -116,3 +116,38 @@ export const headingRevealReduced: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.2, ease: "linear" } },
 };
+
+// Line draws in from left — decorative rule beneath headings
+export const lineReveal: Variants = {
+  hidden: { scaleX: 0 },
+  visible: {
+    scaleX: 1,
+    transition: { duration: 0.75, ease: easings.reveal, delay: 0.25 },
+  },
+};
+
+export const lineRevealReduced: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.2, ease: "linear" } },
+};
+
+// Slide from left — breadcrumbs, metadata
+export const fadeSlideLeft: Variants = {
+  hidden: { opacity: 0, x: -10 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.5, ease: easings.reveal },
+  },
+};
+
+// Scale reveal — cards, outcome grids
+export const scaleReveal: Variants = {
+  hidden: { opacity: 0, scale: 0.97, y: 6 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: easings.reveal },
+  },
+};

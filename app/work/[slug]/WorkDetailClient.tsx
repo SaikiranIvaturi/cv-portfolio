@@ -3,7 +3,13 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Reveal } from "@/components/Reveal";
 import { PageHeading } from "@/components/PageHeading";
-import { fadeUp, fadeUpReduced, staggerContainer } from "@/lib/motion";
+import {
+  fadeUp,
+  fadeUpReduced,
+  fadeSlideLeft,
+  scaleReveal,
+  staggerContainer,
+} from "@/lib/motion";
 import type { WorkPost } from "@/lib/content";
 
 interface Props {
@@ -15,83 +21,166 @@ interface Props {
 
 export function WorkDetailClient({ post, prev, next, children }: Props) {
   const reduced = useReducedMotion();
-  const itemVariant = reduced ? fadeUpReduced : fadeUp;
+  const item = reduced ? fadeUpReduced : fadeUp;
+  const slideLeft = reduced ? fadeUpReduced : fadeSlideLeft;
+  const scale = reduced ? fadeUpReduced : scaleReveal;
+
+  const stackTags = post.frontmatter.stack
+    .split("·")
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   return (
-    <div className="pt-24 pb-20 px-6">
-      <div className="max-w-[880px] mx-auto pt-14">
+    <div className="pt-24 pb-28 px-6">
+      <div className="max-w-[880px] mx-auto">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
+          className="pt-14"
         >
-          <motion.nav variants={itemVariant} aria-label="Breadcrumb" className="mb-8">
+          {/* Breadcrumb */}
+          <motion.nav
+            variants={slideLeft}
+            aria-label="Breadcrumb"
+            className="mb-12 flex items-center gap-2"
+          >
             <Link
               href="/work"
-              className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] text-[var(--ink-muted)] no-underline hover:text-[var(--accent)]"
+              className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] text-[var(--ink-subtle)] no-underline hover:text-[var(--accent)] transition-colors"
             >
-              Work /
+              Work
             </Link>
+            <span
+              className="text-[var(--ink-subtle)] mx-1 text-[12px]"
+              aria-hidden="true"
+            >
+              /
+            </span>
+            <span className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] text-[var(--ink-muted)] truncate">
+              {post.frontmatter.title}
+            </span>
           </motion.nav>
 
-          <PageHeading className="mb-4">{post.frontmatter.title}</PageHeading>
+          {/* Title */}
+          <PageHeading className="mb-10">{post.frontmatter.title}</PageHeading>
 
-          <motion.p
-            variants={itemVariant}
-            className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] text-[var(--ink-muted)] mb-6 leading-relaxed"
+          {/* Role + timeframe */}
+          <motion.div
+            variants={item}
+            className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-5"
           >
-            {post.frontmatter.role} &nbsp;|&nbsp; {post.frontmatter.timeframe} &nbsp;|&nbsp; {post.frontmatter.stack}
-          </motion.p>
+            <span className="font-[family-name:var(--font-inter-tight)] text-[15px] text-[var(--ink)]">
+              {post.frontmatter.role}
+            </span>
+            <span className="text-[var(--ink-subtle)]" aria-hidden="true">
+              —
+            </span>
+            <span className="font-[family-name:var(--font-jetbrains-mono)] text-[13px] text-[var(--ink-muted)]">
+              {post.frontmatter.timeframe}
+            </span>
+          </motion.div>
 
-          <motion.p
-            variants={itemVariant}
-            className="font-[family-name:var(--font-inter-tight)] text-[20px] italic text-[var(--ink-muted)] leading-relaxed mb-10 border-b border-[var(--rule)] pb-10"
+          {/* Stack pills */}
+          <motion.div variants={item} className="flex flex-wrap gap-2 mb-12">
+            {stackTags.map((tag) => (
+              <span
+                key={tag}
+                className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.05em] text-[var(--ink-subtle)] border border-[var(--rule)] px-3 py-1 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+          </motion.div>
+
+          {/* Lede as blockquote */}
+          <motion.blockquote
+            variants={item}
+            className="pl-5 border-l-2 border-[var(--accent)] font-[family-name:var(--font-fraunces)] text-[21px] italic text-[var(--ink-muted)] leading-[1.5] mb-14 max-w-[680px]"
           >
             {post.frontmatter.lede}
-          </motion.p>
+          </motion.blockquote>
 
-          {post.frontmatter.outcomes && post.frontmatter.outcomes.length > 0 && (
-            <motion.aside
-              variants={itemVariant}
-              aria-label="Project outcomes"
-              className="mb-10 p-5 bg-[var(--surface)] border border-[var(--rule)] rounded-sm"
-            >
-              <h2 className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.08em] text-[var(--ink-subtle)] mb-4">
-                Outcomes
-              </h2>
-              <ul className="list-none m-0 p-0 space-y-2">
-                {post.frontmatter.outcomes.map((outcome, i) => (
-                  <li key={i} className="font-[family-name:var(--font-inter-tight)] text-[15px] text-[var(--ink)] leading-snug flex items-start gap-2">
-                    <span className="text-[var(--accent)] mt-0.5 shrink-0">&rsaquo;</span>
-                    {outcome}
-                  </li>
-                ))}
-              </ul>
-            </motion.aside>
-          )}
+          {/* Outcomes */}
+          {post.frontmatter.outcomes &&
+            post.frontmatter.outcomes.length > 0 && (
+              <motion.aside
+                variants={scale}
+                aria-label="Project outcomes"
+                className="mb-14"
+              >
+                <h2 className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.1em] text-[var(--ink-subtle)] mb-5">
+                  Outcomes
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {post.frontmatter.outcomes.map((outcome, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-3 p-4 bg-[var(--surface)] border border-[var(--rule)] rounded-sm"
+                    >
+                      <span className="font-[family-name:var(--font-jetbrains-mono)] text-[var(--accent)] text-[11px] mt-0.5 shrink-0 tabular-nums">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="font-[family-name:var(--font-inter-tight)] text-[14px] text-[var(--ink)] leading-snug">
+                        {outcome}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </motion.aside>
+            )}
+
+          <motion.div variants={item} className="h-px bg-[var(--rule)] mb-14" />
         </motion.div>
 
+        {/* Body content */}
         <Reveal>
-          <article className="mdx-content">
-            {children}
-          </article>
+          <article className="mdx-content">{children}</article>
         </Reveal>
 
+        {/* Prev / Next */}
         {(prev || next) && (
           <Reveal>
-            <nav aria-label="Project navigation" className="mt-16 pt-8 border-t border-[var(--rule)] flex justify-between gap-4">
+            <nav
+              aria-label="Project navigation"
+              className="mt-20 pt-8 border-t border-[var(--rule)] grid grid-cols-2 gap-8"
+            >
               {prev ? (
-                <Link href={`/work/${prev.slug}`} className="group flex flex-col no-underline">
-                  <span className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.06em] text-[var(--ink-subtle)] mb-1">&larr; Previous</span>
-                  <span className="font-[family-name:var(--font-fraunces)] text-[18px] text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors">{prev.frontmatter.title}</span>
+                <Link
+                  href={`/work/${prev.slug}`}
+                  className="group flex flex-col gap-1.5 no-underline"
+                >
+                  <span className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.08em] text-[var(--ink-subtle)] group-hover:text-[var(--accent)] transition-colors">
+                    &larr; Prev
+                  </span>
+                  <span className="font-[family-name:var(--font-fraunces)] text-[21px] text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors leading-snug">
+                    {prev.frontmatter.title}
+                  </span>
+                  <span className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] text-[var(--ink-subtle)]">
+                    {prev.frontmatter.timeframe}
+                  </span>
                 </Link>
-              ) : <div />}
+              ) : (
+                <div />
+              )}
               {next ? (
-                <Link href={`/work/${next.slug}`} className="group flex flex-col text-right no-underline">
-                  <span className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.06em] text-[var(--ink-subtle)] mb-1">Next &rarr;</span>
-                  <span className="font-[family-name:var(--font-fraunces)] text-[18px] text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors">{next.frontmatter.title}</span>
+                <Link
+                  href={`/work/${next.slug}`}
+                  className="group flex flex-col gap-1.5 text-right no-underline ml-auto"
+                >
+                  <span className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.08em] text-[var(--ink-subtle)] group-hover:text-[var(--accent)] transition-colors">
+                    Next &rarr;
+                  </span>
+                  <span className="font-[family-name:var(--font-fraunces)] text-[21px] text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors leading-snug">
+                    {next.frontmatter.title}
+                  </span>
+                  <span className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] text-[var(--ink-subtle)]">
+                    {next.frontmatter.timeframe}
+                  </span>
                 </Link>
-              ) : <div />}
+              ) : (
+                <div />
+              )}
             </nav>
           </Reveal>
         )}

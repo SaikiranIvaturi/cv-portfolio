@@ -7,42 +7,46 @@ import type { WritingPost } from "@/lib/content";
 
 export function WritingListClient({ posts }: { posts: WritingPost[] }) {
   const reduced = useReducedMotion();
-  const itemVariant = reduced ? fadeUpReduced : fadeUp;
+  const item = reduced ? fadeUpReduced : fadeUp;
 
   return (
-    <div className="pt-24 pb-20 px-6">
+    <div className="pt-24 pb-28 px-6">
       <motion.div
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="max-w-[880px] mx-auto pt-14"
+        className="max-w-[880px] mx-auto"
       >
-        <div className="mb-10">
+        {/* Header */}
+        <div className="pt-14 pb-16 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
           <PageHeading>Writing</PageHeading>
           <motion.p
-            variants={itemVariant}
-            className="font-[family-name:var(--font-inter-tight)] text-[17px] text-[var(--ink-muted)] mt-5 max-w-[560px] leading-relaxed"
+            variants={item}
+            className="font-[family-name:var(--font-inter-tight)] text-[15px] text-[var(--ink-muted)] lg:max-w-[260px] lg:text-right leading-relaxed lg:pb-2 shrink-0"
           >
-            Technical notes and process writing. I write when I figure something
-            out that took longer than it should have.
+            Technical notes from things that took longer than they should have.
           </motion.p>
         </div>
 
-        <motion.div variants={itemVariant} className="border-t border-[var(--rule)]">
-          <div className="xl:grid xl:grid-cols-2">
-            {posts.map((post) => (
-              <motion.div key={post.slug} variants={itemVariant}>
-                <ProjectRow
-                  year={new Date(post.frontmatter.date).getFullYear()}
-                  title={post.frontmatter.title}
-                  description={post.frontmatter.description}
-                  href={`/writing/${post.slug}`}
-                  tag={post.readingTime}
-                />
-              </motion.div>
-            ))}
-          </div>
+        <motion.div variants={item} className="border-t border-[var(--rule)]">
+          {posts.map((post) => (
+            <ProjectRow
+              key={post.slug}
+              year={new Date(post.frontmatter.date).getFullYear()}
+              title={post.frontmatter.title}
+              description={post.frontmatter.description}
+              href={`/writing/${post.slug}`}
+              tag={post.readingTime}
+            />
+          ))}
         </motion.div>
+
+        <motion.p
+          variants={item}
+          className="mt-6 font-[family-name:var(--font-jetbrains-mono)] text-[11px] text-[var(--ink-subtle)] uppercase tracking-[0.08em]"
+        >
+          {posts.length} post{posts.length !== 1 ? "s" : ""}
+        </motion.p>
       </motion.div>
     </div>
   );

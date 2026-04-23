@@ -30,7 +30,8 @@ function AnimatedIntro({ text }: { text: string }) {
   return (
     <motion.p
       variants={prefersReducedMotion ? fadeUpReduced : wordStaggerContainer}
-      className="font-[family-name:var(--font-fraunces)] text-[28px] sm:text-[36px] font-normal text-[var(--ink)] leading-[1.35] tracking-[-0.01em] m-0"
+      className="font-[family-name:var(--font-fraunces)] font-normal text-[var(--ink)] leading-[1.3] tracking-[-0.02em] m-0"
+      style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)" }}
       aria-label={text}
     >
       {words.map((word, i) => (
@@ -77,7 +78,7 @@ export function HomepageClient({ work, writing }: Props) {
   const initialState = !mounted || !shouldAnimate ? false : "hidden";
 
   return (
-    <div className="pt-24 pb-16">
+    <div className="pt-24 pb-24">
       {shouldAnimate && (
         <IntroCurtain onComplete={() => setIntroDone(true)} lineY={54} />
       )}
@@ -89,40 +90,28 @@ export function HomepageClient({ work, writing }: Props) {
         }
         className="max-w-[880px] mx-auto px-6"
       >
-        {/* ─── Intro band with word-split ─── */}
+        {/* ── Intro ── */}
         <motion.section
           variants={prefersReducedMotion ? fadeUpReduced : wordStaggerContainer}
-          className="pt-16 pb-14 max-w-[640px]"
+          className="pt-20 pb-20 max-w-[720px]"
           aria-label="Introduction"
         >
           <AnimatedIntro text="I'm Saikiran — a frontend engineer who builds product interfaces that are fast, accessible, and easy to use. I work in React and TypeScript, mostly on tools where the data is complex and the users are busy." />
         </motion.section>
 
-        <motion.span
-          variants={sectionVariant}
-          className="block text-[var(--accent)] text-[16px] mb-12"
-          aria-hidden="true"
-        >
-          ✦
-        </motion.span>
-
-        {/* ─── Currently ─── */}
+        {/* ── Currently ── */}
         <motion.section
           variants={sectionVariant}
-          className="mb-16 max-w-[640px]"
+          className="mb-24 pl-5 border-l-2 border-[var(--accent)] max-w-[580px]"
           aria-labelledby="currently-heading"
         >
           <h2
             id="currently-heading"
-            className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] uppercase tracking-[0.08em] text-[var(--ink-subtle)] mb-3 flex items-center gap-2"
+            className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.1em] text-[var(--accent)] mb-3"
           >
-            <span
-              className="inline-block w-2 h-2 rounded-full bg-[var(--accent)]"
-              aria-hidden="true"
-            />
             Currently
           </h2>
-          <p className="font-[family-name:var(--font-inter-tight)] text-[15px] text-[var(--ink)] leading-[1.7] m-0">
+          <p className="font-[family-name:var(--font-inter-tight)] text-[16px] text-[var(--ink)] leading-[1.7] m-0">
             Frontend lead on ECAP-Elevate and Cost of Care AI at Carelon &mdash;
             internal platforms for clinical analytics and care-management
             workflows. Heavy state, role-based access, complex data made
@@ -130,19 +119,27 @@ export function HomepageClient({ work, writing }: Props) {
           </p>
         </motion.section>
 
-        {/* ─── Selected Work ─── */}
+        {/* ── Selected Work ── */}
         <motion.section
           variants={sectionVariant}
-          className="mb-16"
+          className="mb-24"
           aria-labelledby="work-heading"
         >
-          <h2
-            id="work-heading"
-            className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] uppercase tracking-[0.08em] text-[var(--ink-subtle)] mb-1"
-          >
-            Selected Work
-          </h2>
-          <div className="max-w-[720px]">
+          <div className="flex items-center justify-between mb-6">
+            <h2
+              id="work-heading"
+              className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.1em] text-[var(--ink-subtle)]"
+            >
+              Selected Work
+            </h2>
+            <Link
+              href="/work"
+              className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.06em] text-[var(--ink-subtle)] hover:text-[var(--accent)] no-underline transition-colors"
+            >
+              All work &rarr;
+            </Link>
+          </div>
+          <div className="border-t border-[var(--rule)]">
             {work.map((item) => (
               <ProjectRow
                 key={item.slug}
@@ -153,37 +150,29 @@ export function HomepageClient({ work, writing }: Props) {
               />
             ))}
           </div>
-          <div className="mt-5 border-t border-[var(--rule)]">
-            <Link
-              href="/work"
-              className="inline-block font-[family-name:var(--font-jetbrains-mono)] text-[12px] uppercase tracking-[0.06em] text-[var(--ink-subtle)] hover:text-[var(--accent)] mt-4 no-underline"
-            >
-              All work &rarr;
-            </Link>
-          </div>
         </motion.section>
 
-        <motion.span
-          variants={sectionVariant}
-          className="block text-[var(--accent)] text-[16px] mb-12"
-          aria-hidden="true"
-        >
-          ✦
-        </motion.span>
-
-        {/* ─── Writing ─── */}
+        {/* ── Writing ── */}
         <motion.section
           variants={sectionVariant}
-          className="mb-16"
+          className="mb-24"
           aria-labelledby="writing-heading"
         >
-          <h2
-            id="writing-heading"
-            className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] uppercase tracking-[0.08em] text-[var(--ink-subtle)] mb-1"
-          >
-            Writing
-          </h2>
-          <div className="max-w-[720px]">
+          <div className="flex items-center justify-between mb-6">
+            <h2
+              id="writing-heading"
+              className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.1em] text-[var(--ink-subtle)]"
+            >
+              Writing
+            </h2>
+            <Link
+              href="/writing"
+              className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.06em] text-[var(--ink-subtle)] hover:text-[var(--accent)] no-underline transition-colors"
+            >
+              All writing &rarr;
+            </Link>
+          </div>
+          <div className="border-t border-[var(--rule)]">
             {writing.map((item) => (
               <ProjectRow
                 key={item.slug}
@@ -195,23 +184,15 @@ export function HomepageClient({ work, writing }: Props) {
               />
             ))}
           </div>
-          <div className="mt-5 border-t border-[var(--rule)]">
-            <Link
-              href="/writing"
-              className="inline-block font-[family-name:var(--font-jetbrains-mono)] text-[12px] uppercase tracking-[0.06em] text-[var(--ink-subtle)] hover:text-[var(--accent)] mt-4 no-underline"
-            >
-              All writing &rarr;
-            </Link>
-          </div>
         </motion.section>
 
-        {/* ─── Elsewhere ─── */}
+        {/* ── Elsewhere ── */}
         <motion.section
           variants={sectionVariant}
-          className="max-w-[640px]"
+          className="max-w-[480px]"
           aria-label="Contact and links"
         >
-          <h2 className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] uppercase tracking-[0.08em] text-[var(--ink-subtle)] mb-3">
+          <h2 className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] uppercase tracking-[0.1em] text-[var(--ink-subtle)] mb-4">
             Elsewhere
           </h2>
           <p className="font-[family-name:var(--font-jetbrains-mono)] text-[13px] text-[var(--ink-muted)] m-0">
@@ -219,7 +200,7 @@ export function HomepageClient({ work, writing }: Props) {
               href="https://github.com/SaikiranIvaturi"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[var(--ink-muted)] hover:text-[var(--accent)] no-underline"
+              className="text-[var(--ink-muted)] hover:text-[var(--accent)] no-underline transition-colors"
             >
               GitHub
             </a>
@@ -228,14 +209,14 @@ export function HomepageClient({ work, writing }: Props) {
               href="https://www.linkedin.com/in/saikiran-ivaturi/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[var(--ink-muted)] hover:text-[var(--accent)] no-underline"
+              className="text-[var(--ink-muted)] hover:text-[var(--accent)] no-underline transition-colors"
             >
               LinkedIn
             </a>
             &nbsp;&middot;&nbsp;
             <a
               href="mailto:ivaturisaikiran@gmail.com"
-              className="text-[var(--ink-muted)] hover:text-[var(--accent)] no-underline"
+              className="text-[var(--ink-muted)] hover:text-[var(--accent)] no-underline transition-colors"
             >
               ivaturisaikiran@gmail.com
             </a>
