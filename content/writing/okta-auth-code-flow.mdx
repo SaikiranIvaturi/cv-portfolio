@@ -19,6 +19,12 @@ The solution is to handle the OAuth token exchange server-side and communicate w
 
 Here's what the complete flow looks like with a backend proxy:
 
+<img
+  src="/images/okta-auth-flow.svg"
+  alt="Sequence diagram of the Okta authorization code flow with backend proxy"
+  style={{ width: "100%", borderRadius: "8px", margin: "1.5rem 0" }}
+/>
+
 1. The React app detects the user isn't authenticated and redirects to Okta's authorization endpoint, passing `response_type=code`, `client_id`, `redirect_uri`, and `state`.
 
 2. The user authenticates at Okta and is redirected back to your application's backend callback URL (not the React app directly) with an authorization `code` and the `state` parameter.
