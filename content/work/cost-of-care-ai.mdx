@@ -1,60 +1,37 @@
 ---
 title: "Cost of Care AI"
 description: "A clinical expenditure modelling tool for healthcare analysts at Carelon."
-lede: "How I built the frontend for an AI-assisted clinical cost modelling product from 0 to production — and what I learned about state design when your data is probabilistic."
+lede: "Joining an AI-assisted clinical cost modelling product mid-build — the components I owned, the feature I redesigned from scratch, and what I learned working inside an established codebase."
 role: "Frontend Lead"
 timeframe: "2023 – Present"
 stack: "React · Redux Toolkit · TypeScript · React Query · Recharts"
 year: 2025
 order: 2
 outcomes:
-  - "Reduced analyst time-to-insight from ~45 minutes to under 8 minutes per scenario"
-  - "WCAG AA compliant at launch — first product in the division to ship accessibility-first"
-  - "LCP improved from 4.2s to 1.8s through code splitting and query caching"
-  - "Shipped to 200+ internal users with zero critical post-launch bugs"
+  - "Completely redesigned the Contract Search feature, replacing the original flow with a faster, clearer UX"
+  - "Built the Research Recommendations and Ideation Chat interface from scratch"
+  - "Refined visual design and component styles across the product for consistency"
 ---
 
 ## Background
 
-Could we give clinical analysts a tool to model how protocol changes ripple through cost projections across a patient population? That was the bet. Getting it right required a frontend that could handle uncertainty — model outputs were _distributions_, not point estimates.
-
-![The Population Cost Forecast view — scenario filters, KPI summary cards, expenditure trend chart, and a variance-flagged provider table](/images/work/cost-of-care-ai.png)
+Cost of Care AI gives clinical analysts at Carelon a tool to model how protocol changes ripple through cost projections across a patient population. Model outputs are _distributions_, not point estimates — the UI had to communicate uncertainty clearly without overwhelming users.
 
 ## My role
 
-I joined when it was a Figma prototype. I owned frontend architecture end-to-end:
+I joined roughly two months after the initial build. The core architecture and Redux state model were already in place — my job was to extend the product and improve what was there.
 
-- React + Redux Toolkit project structure and component contracts
-- Okta OIDC integration via a backend token proxy
-- Recharts visualisations for distribution rendering, including a custom confidence-interval chart
-- CI pipeline with Playwright and Vitest
+- Built the **Research Recommendations** panel — surfacing protocol suggestions contextual to the active scenario
+- Built the **Ideation Chat** interface — a freeform AI chat embedded alongside the modelling workflow
+- Completely **redesigned Contract Search** — replaced the original flow with a cleaner search-first UX, reducing friction finding and comparing contracts
+- Enhanced visual design and component styles across the product for consistency and polish
 
-## Modelling probability in UI state
+## Redesigning Contract Search
 
-A scenario had a lifecycle: draft → submitted → processing → complete → stale. I modelled this as a finite state machine in Redux with typed discriminated unions, so the UI could exhaustively switch on `scenario.status` and TypeScript caught missing cases at compile time.
-
-```typescript
-type ScenarioState =
-  | { status: "draft"; config: ScenarioConfig }
-  | {
-      status: "processing";
-      config: ScenarioConfig;
-      jobId: string;
-      progress: number;
-    }
-  | { status: "complete"; config: ScenarioConfig; results: ScenarioResults }
-  | {
-      status: "stale";
-      config: ScenarioConfig;
-      results: ScenarioResults;
-      reason: string;
-    };
-```
-
-![The Cost Variance Analysis grid — member-level claim breakdown with inline variance flags, expandable DRG detail rows, and the scenario parameter panel](/images/work/cost-of-care-ai-grid.png)
+The original Contract Search was functional but slow to use — analysts had to step through a multi-screen flow to find and compare contracts. I redesigned it as a search-first surface: a persistent search bar, inline filtering, and comparison directly in the results view. The structure of the feature didn't change, but the way you got to what you needed did.
 
 ---
 
 ## Outcome
 
-Shipped to 200+ internal analysts in Q2 2024. Median time-to-insight dropped from ~45 minutes to 7.5 minutes. We passed a formal WCAG 2.1 AA audit at launch — the first product in the division to do so.
+Live with internal analysts. The Ideation Chat and Research Recommendations gave analysts a way to interrogate the model in plain language alongside the data — something the original product didn't have. Contract Search feedback was noticeably better after the redesign.
