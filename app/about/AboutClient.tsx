@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { fadeUp, fadeUpReduced, staggerContainer } from "@/lib/motion";
+import { PageHeading } from "@/components/PageHeading";
 
 export function AboutClient() {
   const reduced = useReducedMotion();
@@ -12,25 +13,20 @@ export function AboutClient() {
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="max-w-[640px] mx-auto pt-14"
+      className="max-w-[880px] mx-auto pt-14"
     >
-      <motion.div variants={item}>
+      <motion.div variants={item} className="mb-8">
         <Image
           src="/images/avatar.jpeg"
           alt="Saikiran Ivaturi"
           width={80}
           height={80}
-          className="rounded-full mb-8"
+          className="rounded-full"
           priority
         />
       </motion.div>
 
-      <motion.h1
-        variants={item}
-        className="font-[family-name:var(--font-fraunces)] text-[36px] font-normal tracking-[-0.02em] text-[var(--ink)] mb-8 leading-tight"
-      >
-        About
-      </motion.h1>
+      <PageHeading className="mb-10">About</PageHeading>
 
       <div className="prose-content">
         <motion.p variants={item} className="text-[17px] text-[var(--ink)] leading-[1.75] mb-6">

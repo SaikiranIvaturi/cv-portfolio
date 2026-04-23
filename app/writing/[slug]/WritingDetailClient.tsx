@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Reveal } from "@/components/Reveal";
+import { PageHeading } from "@/components/PageHeading";
 import { fadeUp, fadeUpReduced, staggerContainer } from "@/lib/motion";
 import type { WritingPost } from "@/lib/content";
 
@@ -18,7 +19,7 @@ export function WritingDetailClient({ post, prev, next, children }: Props) {
 
   return (
     <div className="pt-24 pb-20 px-6">
-      <div className="max-w-[640px] mx-auto pt-14">
+      <div className="max-w-[880px] mx-auto pt-14">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -33,12 +34,7 @@ export function WritingDetailClient({ post, prev, next, children }: Props) {
             </Link>
           </motion.nav>
 
-          <motion.h1
-            variants={itemVariant}
-            className="font-[family-name:var(--font-fraunces)] text-[36px] font-[500] tracking-[-0.02em] text-[var(--ink)] mb-4 leading-tight"
-          >
-            {post.frontmatter.title}
-          </motion.h1>
+          <PageHeading className="mb-4">{post.frontmatter.title}</PageHeading>
 
           <motion.div
             variants={itemVariant}

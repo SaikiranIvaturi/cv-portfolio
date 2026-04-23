@@ -101,3 +101,18 @@ export const wordVariantReduced: Variants = {
     transition: { duration: 0.2, ease: "linear" },
   },
 };
+
+// Clip-reveal: heading slides up from below an overflow-hidden mask
+export const headingReveal: Variants = {
+  hidden: { y: "105%", opacity: 0 },
+  visible: {
+    y: "0%",
+    opacity: 1,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+export const headingRevealReduced: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.2, ease: "linear" } },
+};
