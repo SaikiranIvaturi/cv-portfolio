@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
 const withMDX = createMDX({
   options: {
     // Use string-based plugin name for Turbopack serialization compatibility
-    remarkPlugins: ["remark-gfm"],
+    remarkPlugins: ["remark-gfm", "remark-frontmatter"],
     rehypePlugins: [],
   },
 });
