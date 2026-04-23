@@ -67,11 +67,10 @@ export function AboutClient() {
                 </p>
               </div>
               <p className="font-[family-name:var(--font-inter-tight)] text-[16px] text-[var(--ink-muted)] leading-[1.7]">
-                Software Engineer II on ECAP-Elevate and Cost of Care AI —
-                platforms for clinical analytics, cost-of-care tracking, and
-                AI-assisted decision support. Heavy state design, Okta OIDC
-                auth, and role-based access across analyst, admin, and executive
-                tiers.
+                Software Engineer II at Carelon — two internal platforms for
+                clinical analytics, cost-of-care tracking, and AI-assisted
+                decision support. Heavy state design, Okta OIDC auth, and
+                role-based access across analyst, admin, and executive tiers.
               </p>
             </div>
             {/* BNY Mellon */}

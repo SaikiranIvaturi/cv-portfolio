@@ -10,9 +10,9 @@ const experience = [
     period: "Feb 2023 – Present",
     location: "Gurugram, India",
     bullets: [
-      "Software Engineer II on ECAP-Elevate — unified five siloed reporting surfaces into a single authenticated platform for Elevance Health operations teams. Built the application shell, Okta OIDC with idle session detection and automatic token refresh, and role-based access across admin, analyst, and executive tiers.",
-      "Software Engineer II on Cost of Care AI — built data-intensive dashboards displaying cost trends, utilisation metrics, and AI-generated insights. Managed global state with Redux Toolkit, handling asynchronous API calls and large datasets, and integrated AI-driven APIs translating complex data into intuitive visual experiences.",
-      "Led frontend on DEVA — designed component architecture, established coding standards, and integrated Okta OIDC auth. Delivered a 92% improvement in cut submission processing speed (7,000 cuts in 110 minutes) and a 90% reduction in data load times.",
+      "Software Engineer II — led frontend on a full-scale clinical analytics platform consolidating five previously siloed reporting surfaces into a single authenticated application. Built the application shell, Okta OIDC with idle session detection and automatic token refresh, and role-based access across admin, analyst, and executive tiers.",
+      "Software Engineer II — contributed to an AI-assisted clinical cost modelling tool, building data-intensive dashboards for cost trends, utilisation metrics, and AI-generated insights. Managed global state with Redux Toolkit and integrated AI-driven APIs translating complex data into intuitive visual experiences.",
+      "Frontend lead on an internal care-management workflow tool — designed component architecture, established coding standards, and integrated Okta OIDC auth. Delivered significant improvements to submission processing speed and data load times.",
       "Established team-wide patterns for role-based access control, API error handling, and reusable component libraries following DRY principles.",
       "Mentored junior engineers; contributed to sprint planning, estimations, and Agile ceremonies.",
     ],

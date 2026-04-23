@@ -174,10 +174,9 @@ export function HomepageClient({ work, writing }: Props) {
             Currently
           </h2>
           <p className="font-[family-name:var(--font-inter-tight)] text-[16px] text-[var(--ink)] leading-[1.7] m-0">
-            Software Engineer II on ECAP-Elevate and Cost of Care AI at Carelon
-            &mdash; internal platforms for clinical analytics and
-            care-management workflows. Heavy state, role-based access, complex
-            data made legible.
+            Software Engineer II at Carelon &mdash; building internal platforms
+            for clinical analytics and care-management workflows. Heavy state,
+            role-based access, complex data made legible.
           </p>
         </motion.section>
 
