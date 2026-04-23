@@ -12,7 +12,7 @@ export function AmbientShapes() {
 
   const spin = (dur: number) => ({
     duration: dur,
-    repeat: Infinity as const,
+    repeat: Infinity,
     ease: "linear" as const,
   });
 
