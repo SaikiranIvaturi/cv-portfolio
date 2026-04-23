@@ -1,0 +1,54 @@
+---
+title: "DEVA"
+description: "A data evaluation and validation application for care-management workflows."
+lede: "Building DEVA taught me that the most important interface problem isn't the one on screen — it's who is allowed to see it."
+role: "Frontend Lead"
+timeframe: "2022 – 2023"
+stack: "React · Redux · TypeScript · Okta OIDC · React Hook Form"
+year: 2022
+order: 3
+outcomes:
+  - "Replaced a manual, email-based review process used by 300+ care managers"
+  - "Role-based access covering 6 distinct permission levels, zero security incidents post-launch"
+  - "Form validation layer handling 40+ field types with conditional logic"
+  - "Initial load time under 1.5s on 4G — achieved through aggressive prefetching and lazy loading"
+---
+
+## Background
+
+DEVA replaced a manual care-management workflow: clinical teams submitting data via email, reviewers working through spreadsheet checklists. It brought that process into a structured interface with validation, audit trails, and role-appropriate views.
+
+## The permission model
+
+Six distinct roles, each with different read/write permissions and navigation. Rather than hardcoding role checks, I built a `usePermissions` hook that returned a typed object from decoded Okta JWT claims:
+
+```typescript
+interface Permissions {
+  canSubmit: boolean;
+  canReview: boolean;
+  canAudit: boolean;
+  canManageUsers: boolean;
+  visibleQueues: QueueType[];
+}
+```
+
+Components checked `permissions.canReview`, never `user.role === "supervisor"`. When a new role was added post-launch, one mapping change propagated everywhere.
+
+## Form architecture
+
+40+ field types with conditional logic — show field B only if field A exceeds a threshold; require field C only for certain categories. I built a JSON-driven schema on React Hook Form so the product team could change form behaviour without touching component code.
+
+```typescript
+type FieldSchema = {
+  key: string;
+  type: "text" | "select" | "date" | "number" | "file";
+  validation?: ValidationRule[];
+  displayWhen?: ConditionalRule;
+};
+```
+
+---
+
+## Outcome
+
+Replaced a three-year-old email process. Care managers saved 30–45 minutes per review cycle. Compliance reviews that previously required digging through email chains now resolved against a timestamped audit log.

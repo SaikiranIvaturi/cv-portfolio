@@ -1,0 +1,54 @@
+---
+title: "ECAP-Elevate"
+description: "A cost-of-care analytics platform for Elevance Health, consolidating clinical insights, KPI tracking, and AI-driven decision support in a single internal tool."
+lede: "I built the frontend for a full-scale clinical analytics platform — one that combines real-time cost dashboards, AI chat, role-based access, and a guided decision tree into a single surface for healthcare operations teams."
+role: "Frontend Lead"
+timeframe: "2025 – Present"
+stack: "React 19 · TypeScript · Vite · Tailwind CSS · MUI · Chart.js · React Router v6 · Python FastAPI"
+year: 2025
+order: 1
+outcomes:
+  - "Unified five previously siloed reporting surfaces into a single authenticated platform"
+  - "Integrated Okta OIDC with idle session detection and automatic token refresh"
+  - "Shipped role-based access control across admin, analyst, and executive user tiers"
+  - "Live KPI targets: $5.1B cost-of-care savings, 4.55M member months, 82.8% MLR"
+---
+
+## Background
+
+ECAP-Elevate is an internal platform for Elevance Health's cost-of-care operations teams. It replaced five disconnected surfaces — dashboards, spreadsheets, notes, decision logs, and a reporting pipeline — with a single authenticated application.
+
+## My role
+
+I owned frontend architecture end-to-end alongside a Python FastAPI team:
+
+- Application shell — collapsible nav, route transitions, persistent top bar with Okta session state
+- Role-based access across admin, analyst, and executive tiers via `RoleContext`
+- Okta OIDC integration with idle timeout detection and automatic logout
+- Dashboards Hub — categorised analytics views across lines of business
+- AI Chat with context-aware mode (pass a flashcard or decision-tree result directly into chat)
+- Decision Tree module (v4) for guided clinical and financial pathways
+- Notes system with typed categories, pinning, search, and backend persistence
+- Insights page surfacing auto-detected cost anomalies and pharmacy opportunities
+
+## Auth and session management
+
+The platform needed two timeout thresholds: a warning modal and a hard logout, both resetting on user activity without causing re-renders. I built a `useIdleTimeout` hook with stable `useCallback` references, keeping all timer logic outside the render cycle.
+
+```typescript
+const { resetTimer } = useIdleTimeout({
+  onTimeout: logout,
+  onWarn: handleWarning,
+  enabled: isAuthenticated,
+});
+```
+
+## Role-based access
+
+Three user tiers with meaningfully different views. Rather than scattering permission checks, I centralised role resolution in `RoleContext` — exposing a `canAccessSettings` boolean and `role` enum from a single hook that every route and nav item reads.
+
+---
+
+## Outcome
+
+Live in dev, tracking a $5.1B cost-of-care savings target across 4.55M member months. The clinical analytics team reported the unified context — dashboards, AI chat, and notes in one place — removed the switching cost slowing down their weekly review cycle.

@@ -1,0 +1,92 @@
+---
+title: "Notes on Building a Minimal UI Component Library for React"
+description: "What I learned from building Fieldwork UI — a personal component library with no dependencies beyond React and Tailwind."
+date: "2023-11-08"
+tags: ["react", "components", "design-systems", "typescript"]
+---
+
+Building a component library is one of those projects that sounds straightforward and immediately isn't. I've done it twice now in production contexts (once at Carelon, once contributing to an internal design system at BNY Mellon) and once for myself with Fieldwork UI. The third time was the most educational because I set the constraints myself.
+
+Here's what I'd tell someone starting from scratch.
+
+## Start with the goal, not the component
+
+The first question isn't "what components do I need?" It's "what problem is this library solving that existing libraries don't?"
+
+For Fieldwork, the answer was: I want components that look like *my* aesthetic by default, that are accessible without configuration, and that have no opinions about CSS-in-JS or theming APIs. Tailwind classes all the way down, composable primitives.
+
+That answer ruled out doing buttons before I'd done focus management. It ruled out a `<Modal />` before I understood the ARIA dialog pattern. The constraint "accessible without configuration" forced me to understand what accessible actually means for each component, not just add `aria-label` and assume.
+
+## The anatomy of a component decision
+
+For every component I add to Fieldwork, I answer four questions before writing any code:
+
+**What HTML element does this map to?** A button is a `<button>`. A navigation region is a `<nav>`. Using semantic HTML for 80% of the job means less ARIA work later.
+
+**What keyboard interactions are required?** The [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/patterns/) has patterns for every interactive widget. I read the pattern before I write the component.
+
+**What is the minimal API surface?** If a component has more than 8 props, it probably needs to be decomposed into sub-components. `<Dialog />` with 20 props is a smell. `<Dialog>`, `<DialogTrigger>`, `<DialogContent>`, `<DialogClose>` with 4 props each is readable.
+
+**What does the consumer not know yet?** Components should be defensive about edge cases the consumer won't think of. A `<Tooltip>` should work when the trigger is disabled. A `<Select>` should handle long option labels without layout breakage.
+
+## The TypeScript pattern I use everywhere
+
+For variant-based components (buttons, badges, alerts), I've converged on a pattern using a `cva`-style approach without the dependency:
+
+```typescript
+type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonSize = "sm" | "md" | "lg";
+
+const buttonStyles: Record<ButtonVariant, Record<ButtonSize, string>> = {
+  primary: {
+    sm: "bg-[var(--accent)] text-white text-sm px-3 py-1.5 rounded",
+    md: "bg-[var(--accent)] text-white text-base px-4 py-2 rounded",
+    lg: "bg-[var(--accent)] text-white text-lg px-6 py-3 rounded",
+  },
+  secondary: {
+    sm: "border border-[var(--rule)] text-[var(--ink)] text-sm px-3 py-1.5 rounded",
+    md: "border border-[var(--rule)] text-[var(--ink)] text-base px-4 py-2 rounded",
+    lg: "border border-[var(--rule)] text-[var(--ink)] text-lg px-6 py-3 rounded",
+  },
+  ghost: {
+    sm: "text-[var(--ink-muted)] hover:text-[var(--ink)] text-sm px-3 py-1.5",
+    md: "text-[var(--ink-muted)] hover:text-[var(--ink)] text-base px-4 py-2",
+    lg: "text-[var(--ink-muted)] hover:text-[var(--ink)] text-lg px-6 py-3",
+  },
+};
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+}
+
+export function Button({
+  variant = "primary",
+  size = "md",
+  className = "",
+  ...props
+}: ButtonProps) {
+  return (
+    <button
+      className={`${buttonStyles[variant][size]} ${className}`}
+      {...props}
+    />
+  );
+}
+```
+
+This pattern is explicit, type-safe, and doesn't require a runtime utility function. The styles are just strings — easy to override, easy to read in devtools.
+
+## What I got wrong the first time
+
+I spent two weeks building a sophisticated theming system before I'd built a single component. The system had CSS variable nesting, dark mode tokens, and a TypeScript theme type. It was elegant and completely premature.
+
+I deleted it all and replaced it with six CSS variables in `:root` and `.dark`. That was enough.
+
+The lesson: don't build infrastructure for a problem you haven't felt yet. The right abstraction emerges from concrete use cases, not from anticipating them.
+
+## On documentation
+
+Storybook is the right tool for documenting components, but it's only useful if the stories are honest. I write stories that demonstrate real usage patterns — the same patterns I'd reach for when building an application — not just "here's every prop combination."
+
+The most useful story I've written for Fieldwork is the `<Form>` story: a complete sign-in form with validation, error states, and loading state, built from the library's primitives. It answers the question "how do I actually use this?" in a way that a props table never can.

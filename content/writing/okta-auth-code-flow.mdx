@@ -1,0 +1,74 @@
+---
+title: "Understanding Okta's Authorization Code Flow with a Backend Proxy"
+description: "A practical walkthrough of implementing OIDC authentication with Okta, using a backend proxy to keep tokens off the client."
+date: "2024-03-15"
+tags: ["auth", "okta", "react", "security"]
+---
+
+At Carelon, we implemented Okta authentication across two products — and both times, the decision to proxy the token exchange through a backend rather than handle it client-side was the right one. This post explains why, and walks through how we did it.
+
+## Why not just use Okta's browser SDK?
+
+Okta's `@okta/okta-react` SDK is convenient. You drop it in, configure the redirect URI, and you have auth working in an afternoon. For many applications, that's fine.
+
+The problem is that it leaves the `access_token` and `refresh_token` in browser storage — typically localStorage or sessionStorage. That's a concrete attack surface. An XSS vulnerability in your application (or a dependency) can exfiltrate those tokens and impersonate users. Refresh tokens are especially sensitive; they're long-lived credentials.
+
+The solution is to handle the OAuth token exchange server-side and communicate with the browser via a short-lived, `HttpOnly`, `Secure` session cookie instead.
+
+## The flow
+
+Here's what the complete flow looks like with a backend proxy:
+
+1. The React app detects the user isn't authenticated and redirects to Okta's authorization endpoint, passing `response_type=code`, `client_id`, `redirect_uri`, and `state`.
+
+2. The user authenticates at Okta and is redirected back to your application's backend callback URL (not the React app directly) with an authorization `code` and the `state` parameter.
+
+3. **This is the key step**: the backend endpoint receives the code, exchanges it for `access_token` and `refresh_token` by calling Okta's `/token` endpoint server-to-server, and then sets the tokens as `HttpOnly` cookies. The authorization code is short-lived (60 seconds) and single-use, so intercepting it gains nothing without the client secret.
+
+4. The backend responds to the browser with a redirect to the application. From the browser's perspective, it's now authenticated — but it holds no token. All subsequent API requests go through the backend, which attaches the authorization header from the cookie.
+
+5. Token refresh is also handled server-side. The backend checks the `access_token` expiry on each request and uses the `refresh_token` to get a new one if needed, all without the browser's involvement.
+
+## What the React app needs to know
+
+The React application becomes dramatically simpler. It doesn't manage tokens. It doesn't need to worry about token storage or expiry. It just:
+
+- Checks a `/api/auth/me` endpoint to determine if the user is authenticated
+- Redirects to `/api/auth/login` to start the auth flow
+- Calls `/api/auth/logout` to end the session
+
+```typescript
+// This is the entire auth state in the React app
+interface AuthState {
+  status: "loading" | "authenticated" | "unauthenticated";
+  user: { email: string; roles: string[] } | null;
+}
+
+function useAuth(): AuthState {
+  const { data, isLoading } = useQuery({
+    queryKey: ["auth-me"],
+    queryFn: () => fetch("/api/auth/me").then((r) => r.json()),
+    retry: false,
+  });
+
+  if (isLoading) return { status: "loading", user: null };
+  if (!data?.email) return { status: "unauthenticated", user: null };
+  return { status: "authenticated", user: data };
+}
+```
+
+## The PKCE addition
+
+We also added PKCE (Proof Key for Code Exchange) even for server-side exchanges. PKCE was originally designed for public clients (SPAs, mobile apps) that can't keep a client secret, but it adds meaningful protection for confidential clients too: it prevents authorization code injection attacks where an attacker substitutes a captured code for their own.
+
+The implementation generates a `code_verifier` (a random 43–128 character string), hashes it to produce a `code_challenge`, and includes the challenge in the initial authorization request. The backend then includes the `code_verifier` when exchanging the code for tokens.
+
+## Tradeoffs
+
+This approach isn't free:
+
+- You need a backend service, even if your app is otherwise a static SPA. We used a Next.js API route.
+- The backend becomes a critical path dependency. If the token exchange service is down, auth is down.
+- Cookie-based auth requires careful `SameSite` and CORS configuration to avoid subtle cross-site issues.
+
+But for a healthcare product where user impersonation would be a serious compliance event, the tradeoffs were clearly worth it. The attack surface is reduced, the browser holds no long-lived credentials, and the security model is simpler to reason about.

@@ -1,0 +1,50 @@
+---
+title: "Operations Data Grid"
+description: "A high-performance financial data grid for internal operations tooling at a global bank."
+lede: "Building a data grid that handles 100,000 rows without freezing taught me that performance work is really product work in disguise."
+role: "Associate Software Engineer"
+timeframe: "2021 – 2022"
+stack: "React · Redux · TypeScript · Canvas API · CSS Grid"
+year: 2021
+order: 4
+outcomes:
+  - "100,000+ row renders at 60fps using virtual scrolling and canvas rendering"
+  - "Replaced a legacy Java Swing desktop application used daily by 80+ operations staff"
+  - "Inline editing with optimistic updates reduced average data-correction time by 60%"
+  - "Zero accessibility regressions vs. legacy tool — keyboard navigation parity maintained"
+---
+
+## Context
+
+Migrating a decade-old Java Swing application to a web interface at BNY Mellon. The core was a data grid with filtering, sorting, inline editing, and real-time updates. The Java app had one thing the browser didn't: it was fast. Operations staff weren't interested in a slower replacement.
+
+## The solution
+
+A naive React table falls apart above 5,000 rows. The grid needed 100,000+ at 60fps. I implemented virtual scrolling with a row recycling mechanism — only visible rows plus an overscan buffer stayed in the DOM. For edit mode, a canvas overlay captured keyboard input before writing back to component state, keeping the DOM minimal during rapid editing.
+
+```typescript
+function getVisibleRange(
+  scrollTop: number,
+  viewportHeight: number,
+  rowHeight: number,
+  totalRows: number,
+  overscan = 5,
+): [number, number] {
+  const start = Math.max(0, Math.floor(scrollTop / rowHeight) - overscan);
+  const end = Math.min(
+    totalRows - 1,
+    Math.ceil((scrollTop + viewportHeight) / rowHeight) + overscan,
+  );
+  return [start, end];
+}
+```
+
+## What I learned
+
+Performance optimisation is a product problem. The 100,000-row constraint existed because the team didn't want pagination — they needed to scroll, spot anomalies, and act. Understanding _why_ informed every technical decision.
+
+---
+
+## Outcome
+
+Replaced a daily-use legacy application with zero accessibility regressions. Operations staff hit sub-100ms response on scroll and filter. One team member navigated entirely by keyboard due to RSI — we maintained that workflow throughout.
