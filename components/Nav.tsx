@@ -9,6 +9,7 @@ import { easings } from "@/lib/motion";
 
 const navLinks = [
   { label: "Work", href: "/work" },
+  { label: "Projects", href: "/projects" },
   { label: "Writing", href: "/writing" },
   { label: "About", href: "/about" },
   { label: "CV", href: "/cv" },

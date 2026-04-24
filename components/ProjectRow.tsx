@@ -6,14 +6,16 @@ interface ProjectRowProps {
   description: string;
   href: string;
   tag?: string;
+  external?: boolean;
 }
 
-export function ProjectRow({ year, title, description, href, tag }: ProjectRowProps) {
+export function ProjectRow({ year, title, description, href, tag, external }: ProjectRowProps) {
   return (
     <article className="relative">
       <Link
         href={href}
         data-cursor="work"
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
         className="group relative flex items-baseline gap-6 py-4 px-4 -mx-4 no-underline border-t border-[var(--rule)] rounded-sm overflow-hidden transition-[background-color] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[var(--accent-soft)]"
         style={{ textDecorationColor: "transparent" }}
       >
@@ -44,6 +46,14 @@ export function ProjectRow({ year, title, description, href, tag }: ProjectRowPr
         {tag && (
           <span className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] text-[var(--ink-subtle)] uppercase tracking-[0.06em] shrink-0 hidden sm:block">
             {tag}
+          </span>
+        )}
+        {external && (
+          <span
+            aria-hidden="true"
+            className="font-[family-name:var(--font-jetbrains-mono)] text-[13px] text-[var(--ink-subtle)] shrink-0 transition-colors duration-200 group-hover:text-[var(--accent)]"
+          >
+            ↗
           </span>
         )}
       </Link>
