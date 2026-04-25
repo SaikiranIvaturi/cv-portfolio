@@ -6,7 +6,9 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { CustomCursor } from "@/components/CustomCursor";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import { AmbientShapes } from "@/components/AmbientShapes";
+import { CommandMenu } from "@/components/CommandMenu";
+import { EasterEgg } from "@/components/EasterEgg";
+import { CursorTrail } from "@/components/CursorTrail";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -89,9 +91,11 @@ const themeScript = `
   try {
     var stored = localStorage.getItem('theme');
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var isDark = stored === 'dark' || (!stored && prefersDark);
+    var isDark = stored ? stored === 'dark' : true;
     if (isDark) document.documentElement.classList.add('dark');
-  } catch(e) {}
+  } catch(e) {
+    document.documentElement.classList.add('dark');
+  }
 })();
 `;
 
@@ -121,12 +125,14 @@ export default function RootLayout({
         </a>
         <Nav />
         <ScrollProgress />
-        <AmbientShapes />
         <main id="main" className="flex-1">
           <PageTransition>{children}</PageTransition>
         </main>
         <Footer />
         <CustomCursor />
+        <CursorTrail />
+        <CommandMenu />
+        <EasterEgg />
       </body>
     </html>
   );

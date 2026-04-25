@@ -2,46 +2,50 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { easings } from "@/lib/motion";
 
-const navLinks = [
-  { label: "Work", href: "/work" },
-  { label: "Projects", href: "/projects" },
-  { label: "Writing", href: "/writing" },
-  { label: "About", href: "/about" },
-  { label: "CV", href: "/cv" },
+const NAV_LINKS = [
+  { label: "WORK",     href: "/work" },
+  { label: "PROJECTS", href: "/projects" },
+  { label: "WRITING",  href: "/writing" },
+  { label: "ABOUT",    href: "/about" },
+  { label: "CV",       href: "/cv" },
 ];
+
+function LiveClock() {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const tick = () =>
+      setTime(
+        new Date().toLocaleTimeString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      );
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return <span suppressHydrationWarning>{time} IST</span>;
+}
 
 export function Nav() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(true);
-  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
-  const lastScrollY = useRef(0);
+  const lastY = { current: 0 };
 
   useEffect(() => {
-    const handleScroll = () => {
-      const current = window.scrollY;
-      if (current > lastScrollY.current && current > 80) {
-        setVisible(false);
-      } else {
-        setVisible(true);
-      }
-      lastScrollY.current = current;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setVisible(y < lastY.current || y < 80);
+      lastY.current = y;
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  // The underline shows on hovered link, falling back to active link
-  const indicatorHref =
-    hoveredHref ??
-    navLinks.find((l) =>
-      l.href === "/" ? pathname === "/" : pathname.startsWith(l.href),
-    )?.href ??
-    null;
 
   return (
     <nav
@@ -51,52 +55,52 @@ export function Nav() {
         transform: visible ? "translateY(0)" : "translateY(-100%)",
         transition: "transform 240ms cubic-bezier(0.32, 0.72, 0, 1)",
       }}
-      className="fixed top-0 left-0 right-0 z-40 bg-[var(--canvas)]/90 backdrop-blur-sm border-b border-[var(--rule)]"
+      className="fixed top-0 left-0 w-full h-20 px-8 flex items-center justify-between border-b-[0.5px] border-[var(--rule)] bg-[var(--canvas)]/80 backdrop-blur-xl z-50"
     >
-      <div className="max-w-[880px] mx-auto px-6 py-4 flex items-center justify-between">
-        <Link
-          href="/"
-          className="font-[family-name:var(--font-fraunces)] text-[18px] text-[var(--ink)] no-underline hover:no-underline font-normal tracking-tight"
+      {/* Logo */}
+      <Link
+        href="/"
+        className="font-[family-name:var(--font-fraunces)] text-2xl italic font-normal tracking-tight text-[var(--accent)] no-underline hover:no-underline"
+        aria-label="Home"
+      >
+        S.
+      </Link>
+
+      {/* Nav links */}
+      <ul className="hidden md:flex items-center gap-10 list-none m-0 p-0">
+        {NAV_LINKS.map((link) => {
+          const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+          return (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className={[
+                  "meta-label no-underline transition-colors duration-200",
+                  active ? "text-[var(--ink)]" : "hover:text-[var(--accent)]",
+                ].join(" ")}
+              >
+                {link.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+
+      {/* Right: clock + actions */}
+      <div className="flex items-center gap-6">
+        <span className="hidden lg:block meta-label tabular-nums">
+          <LiveClock /> // AVAILABLE
+        </span>
+
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent("cmd-menu-open"))}
+          aria-label="Open command menu"
+          className="meta-label border-[0.5px] border-[var(--rule)] px-3 py-2 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors duration-200"
         >
-          Saikiran
-        </Link>
-        <ul
-          className="flex items-center gap-6 list-none m-0 p-0"
-          onMouseLeave={() => setHoveredHref(null)}
-        >
-          {navLinks.map((link) => {
-            const isActive =
-              link.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(link.href);
-            return (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  onMouseEnter={() => setHoveredHref(link.href)}
-                  className={[
-                    "font-[family-name:var(--font-jetbrains-mono)] text-[12px] uppercase tracking-[0.08em] no-underline transition-colors relative pb-1",
-                    isActive
-                      ? "text-[var(--accent)]"
-                      : "text-[var(--ink-muted)] hover:text-[var(--ink)]",
-                  ].join(" ")}
-                >
-                  {link.label}
-                  {indicatorHref === link.href && (
-                    <motion.span
-                      layoutId="nav-underline"
-                      className="absolute bottom-0 left-0 right-0 h-px bg-[var(--accent)]"
-                      transition={{ duration: 0.2, ease: easings.snap }}
-                    />
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-          <li className="flex items-center">
-            <ThemeToggle />
-          </li>
-        </ul>
+          ⌘K
+        </button>
+
+        <ThemeToggle />
       </div>
     </nav>
   );

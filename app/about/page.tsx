@@ -10,9 +10,5 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function AboutPage() {
-  return (
-    <div className="pt-24 pb-20 px-6">
-      <AboutClient />
-    </div>
-  );
+  return <AboutClient />;
 }
