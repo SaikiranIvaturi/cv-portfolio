@@ -6,11 +6,10 @@ import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV_LINKS = [
-  { label: "WORK",     href: "/work" },
-  { label: "PROJECTS", href: "/projects" },
-  { label: "WRITING",  href: "/writing" },
-  { label: "ABOUT",    href: "/about" },
-  { label: "CV",       href: "/cv" },
+  { label: "WORK",    href: "/work" },
+  { label: "WRITING", href: "/writing" },
+  { label: "ABOUT",   href: "/about" },
+  { label: "CV",      href: "/cv" },
 ];
 
 function LiveClock() {
