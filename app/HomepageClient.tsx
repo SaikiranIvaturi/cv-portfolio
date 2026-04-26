@@ -13,17 +13,18 @@ interface Props {
   writing: WritingPost[];
 }
 
-// Image map for work slugs that have screenshots
 const WORK_IMAGES: Record<string, string> = {
-  "cost-of-care-ai": "/images/work/cost-of-care-ai.png",
+  "ecap-elevate":  "/images/work/cost-of-care-ai.png",
+  "jsoncraft":     "/images/projects/jsoncraft.png",
 };
 
 const CATEGORY_MAP: Record<string, string> = {
-  "ecap-elevate":          "HEALTHCARE",
-  "cost-of-care-ai":       "HEALTHCARE / AI",
-  "deva":                  "HEALTHCARE",
-  "operations-data-grid":  "FINANCE",
+  "ecap-elevate":    "HEALTHCARE",
+  "cost-of-care-ai": "HEALTHCARE / AI",
+  "jsoncraft":       "PERSONAL PROJECT",
 };
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 function LiveDot() {
   return (
@@ -49,7 +50,9 @@ function ProjectSection({
 
   return (
     <Link href={`/work/${post.slug}`} className="no-underline block group">
-      <section
+      <motion.section
+        whileTap={{ scale: 0.99 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className={[
           "grid md:grid-cols-12 border-b-[0.5px] border-[var(--rule)] cursor-pointer overflow-hidden",
           index === 0 ? "bg-[var(--canvas)]" : "bg-[var(--surface)]",
@@ -58,7 +61,7 @@ function ProjectSection({
         {/* Text panel */}
         <div
           className={[
-            "md:col-span-7 p-10 lg:p-20 flex flex-col justify-between min-h-[500px]",
+            "md:col-span-7 p-8 lg:p-20 flex flex-col justify-between min-h-[360px] md:min-h-[500px]",
             imageLeft
               ? "md:order-2 md:border-l-[0.5px]"
               : "border-b-[0.5px] md:border-b-0 md:border-r-[0.5px]",
@@ -74,10 +77,10 @@ function ProjectSection({
 
           <div>
             <h2
-              className="font-[family-name:var(--font-fraunces)] font-normal leading-[0.92] uppercase tracking-[-0.03em] text-[var(--ink)] mb-6 transition-all duration-700 ease-in-out group-hover:italic"
+              className="font-[family-name:var(--font-fraunces)] font-normal leading-[0.92] uppercase tracking-[-0.03em] text-[var(--ink)] mb-6"
               style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
             >
-              {post.frontmatter.title}
+              <span className="project-title">{post.frontmatter.title}</span>
             </h2>
             <p className="font-[family-name:var(--font-inter-tight)] text-[17px] max-w-lg text-[var(--ink-muted)] leading-relaxed font-light">
               {post.frontmatter.description}
@@ -88,7 +91,7 @@ function ProjectSection({
         {/* Image panel */}
         <div
           className={[
-            "md:col-span-5 h-[55vh] md:h-auto overflow-hidden bg-[var(--canvas)] relative flex items-center justify-center",
+            "md:col-span-5 h-[42vh] md:h-auto overflow-hidden bg-[var(--canvas)] relative flex items-center justify-center",
             imageLeft ? "md:order-1" : "",
           ].join(" ")}
         >
@@ -97,12 +100,11 @@ function ProjectSection({
               src={image}
               alt={post.frontmatter.title}
               fill
-              className="object-cover grayscale opacity-30 transition-all duration-[1200ms] ease-out group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
+              className="object-cover grayscale project-img opacity-60 md:opacity-30 transition-all duration-[1200ms] ease-out group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 42vw"
             />
           ) : (
             <>
-              {/* Styled no-image panel */}
               <span
                 aria-hidden="true"
                 className="font-[family-name:var(--font-fraunces)] font-bold text-[var(--ink)] pointer-events-none select-none opacity-[0.04] transition-opacity duration-700 group-hover:opacity-[0.08]"
@@ -110,14 +112,13 @@ function ProjectSection({
               >
                 {num}
               </span>
-              {/* Serial tag */}
               <div className="absolute top-6 left-6 meta-label border-[0.5px] border-[var(--rule)] px-3 py-2">
                 REF. {post.frontmatter.year}-{num}
               </div>
             </>
           )}
         </div>
-      </section>
+      </motion.section>
     </Link>
   );
 }
@@ -142,7 +143,6 @@ export function HomepageClient({ work, writing }: Props) {
 
   const show = mounted && (!shouldAnimate || introDone);
 
-  // First 2 work posts get the full-bleed treatment, rest go in the index
   const featured = work.slice(0, 2);
   const indexed  = work.slice(2);
 
@@ -157,7 +157,7 @@ export function HomepageClient({ work, writing }: Props) {
         initial={reduced || !shouldAnimate ? false : { opacity: 0 }}
         animate={show ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative min-h-screen pt-20 px-8 flex flex-col justify-end pb-12 border-b-[0.5px] border-[var(--rule)] overflow-hidden"
+        className="relative min-h-[100svh] pt-20 px-6 md:px-8 flex flex-col justify-end pb-10 md:pb-12 border-b-[0.5px] border-[var(--rule)] overflow-hidden"
         aria-label="Introduction"
       >
         {/* Background watermark */}
@@ -174,7 +174,7 @@ export function HomepageClient({ work, writing }: Props) {
         </span>
 
         {/* Status badge */}
-        <div className="absolute top-28 right-8 flex flex-col items-end gap-2">
+        <div className="absolute top-28 right-6 md:right-8 flex flex-col items-end gap-2">
           <span className="meta-label opacity-40">SYS.REQ</span>
           <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
         </div>
@@ -191,9 +191,9 @@ export function HomepageClient({ work, writing }: Props) {
         <motion.h1
           initial={reduced || !shouldAnimate ? false : { opacity: 0, y: 80 }}
           animate={show ? { opacity: 1, y: 0 } : undefined}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          transition={{ duration: 1, ease: EASE, delay: 0.1 }}
           className="font-[family-name:var(--font-fraunces)] font-normal leading-[0.85] tracking-[-0.04em] uppercase text-[var(--ink)] m-0"
-          style={{ fontSize: "clamp(5rem, 14vw, 16rem)" }}
+          style={{ fontSize: "clamp(4.5rem, 22vw, 16rem)" }}
         >
           SAI
           <br />
@@ -201,28 +201,29 @@ export function HomepageClient({ work, writing }: Props) {
         </motion.h1>
       </motion.header>
 
-      {/* ── FEATURED WORK ────────────────────────────────── */}
-      <motion.div
-        initial={reduced ? false : { opacity: 0 }}
-        animate={show ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      >
-        {featured.map((post, i) => (
-          <ProjectSection key={post.slug} post={post} index={i} />
-        ))}
-      </motion.div>
+      {/* ── FEATURED WORK ─────────────────────────────────── */}
+      {featured.map((post, i) => (
+        <motion.div
+          key={post.slug}
+          initial={reduced ? false : { opacity: 0, y: 48 }}
+          animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 48 }}
+          transition={{ duration: 0.9, ease: EASE, delay: 0.25 + i * 0.2 }}
+        >
+          <ProjectSection post={post} index={i} />
+        </motion.div>
+      ))}
 
       {/* ── MANIFESTO + STATUS ────────────────────────────── */}
       <motion.section
-        initial={reduced ? false : { opacity: 0, y: 24 }}
+        initial={reduced ? false : { opacity: 0, y: 48 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-10% 0px" }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: true, amount: 0.08 }}
+        transition={{ duration: 0.85, ease: EASE }}
         className="grid md:grid-cols-12 border-b-[0.5px] border-[var(--rule)]"
         aria-label="About"
       >
         {/* Left: data panel */}
-        <div className="md:col-span-4 p-10 lg:p-16 flex flex-col justify-between border-b-[0.5px] md:border-b-0 md:border-r-[0.5px] border-[var(--rule)] bg-[var(--surface)] min-h-[400px]">
+        <div className="md:col-span-4 p-8 lg:p-16 flex flex-col justify-between border-b-[0.5px] md:border-b-0 md:border-r-[0.5px] border-[var(--rule)] bg-[var(--surface)]">
           <div className="flex items-center gap-3 meta-label text-[var(--accent)]">
             <LiveDot />
             STATUS: AVAILABLE
@@ -248,7 +249,7 @@ export function HomepageClient({ work, writing }: Props) {
         </div>
 
         {/* Right: manifesto */}
-        <div className="md:col-span-8 p-10 lg:p-20 bg-[var(--canvas)]">
+        <div className="md:col-span-8 p-8 lg:p-20 bg-[var(--canvas)]">
           <h2
             className="font-[family-name:var(--font-fraunces)] font-normal leading-[0.85] tracking-[-0.04em] uppercase text-[var(--ink)] mb-16"
             style={{ fontSize: "clamp(3rem, 8vw, 7rem)" }}
@@ -283,14 +284,14 @@ export function HomepageClient({ work, writing }: Props) {
       {/* ── REMAINING WORK INDEX ─────────────────────────── */}
       {indexed.length > 0 && (
         <motion.section
-          initial={reduced ? false : { opacity: 0, y: 24 }}
+          initial={reduced ? false : { opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, amount: 0.05 }}
+          transition={{ duration: 0.7, ease: EASE }}
           className="border-b-[0.5px] border-[var(--rule)]"
           aria-labelledby="work-index-heading"
         >
-          <div className="px-8 py-6 border-b-[0.5px] border-[var(--rule)] flex items-center justify-between">
+          <div className="px-6 md:px-8 py-6 border-b-[0.5px] border-[var(--rule)] flex items-center justify-between">
             <span id="work-index-heading" className="meta-label">INDEX</span>
             <Link
               href="/work"
@@ -303,19 +304,26 @@ export function HomepageClient({ work, writing }: Props) {
             const num = String(i + featured.length + 1).padStart(2, "0");
             const cat = CATEGORY_MAP[post.slug] ?? "ENGINEERING";
             return (
-              <Link
+              <motion.div
                 key={post.slug}
-                href={`/work/${post.slug}`}
-                className="group flex items-baseline gap-6 px-8 py-5 border-b-[0.5px] border-[var(--rule)] no-underline hover:bg-[var(--surface)] transition-colors duration-200"
-                data-cursor="work"
+                initial={reduced ? false : { opacity: 0, x: -12 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.45, ease: EASE, delay: i * 0.08 }}
               >
-                <span className="meta-label w-8 shrink-0">{num}</span>
-                <span className="meta-label w-32 shrink-0 text-[var(--accent)]">{cat}</span>
-                <span className="font-[family-name:var(--font-fraunces)] text-[20px] font-normal text-[var(--ink)] uppercase tracking-[-0.02em] flex-1 min-w-0 group-hover:italic transition-all duration-300">
-                  {post.frontmatter.title}
-                </span>
-                <span className="meta-label shrink-0">{post.frontmatter.year}</span>
-              </Link>
+                <Link
+                  href={`/work/${post.slug}`}
+                  className="group flex items-baseline gap-4 md:gap-6 px-6 md:px-8 py-5 border-b-[0.5px] border-[var(--rule)] no-underline hover:bg-[var(--surface)] active:bg-[var(--surface)] transition-colors duration-200"
+                  data-cursor="work"
+                >
+                  <span className="meta-label w-8 shrink-0">{num}</span>
+                  <span className="meta-label w-28 md:w-32 shrink-0 text-[var(--accent)]">{cat}</span>
+                  <span className="font-[family-name:var(--font-fraunces)] text-[18px] md:text-[20px] font-normal text-[var(--ink)] uppercase tracking-[-0.02em] flex-1 min-w-0">
+                    <span className="project-title">{post.frontmatter.title}</span>
+                  </span>
+                  <span className="meta-label shrink-0">{post.frontmatter.year}</span>
+                </Link>
+              </motion.div>
             );
           })}
         </motion.section>
@@ -324,14 +332,14 @@ export function HomepageClient({ work, writing }: Props) {
       {/* ── WRITING ───────────────────────────────────────── */}
       {writing.length > 0 && (
         <motion.section
-          initial={reduced ? false : { opacity: 0, y: 24 }}
+          initial={reduced ? false : { opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, amount: 0.05 }}
+          transition={{ duration: 0.7, ease: EASE }}
           className="border-b-[0.5px] border-[var(--rule)]"
           aria-labelledby="writing-heading"
         >
-          <div className="px-8 py-6 border-b-[0.5px] border-[var(--rule)] flex items-center justify-between">
+          <div className="px-6 md:px-8 py-6 border-b-[0.5px] border-[var(--rule)] flex items-center justify-between">
             <span id="writing-heading" className="meta-label">WRITING</span>
             <Link
               href="/writing"
@@ -343,17 +351,24 @@ export function HomepageClient({ work, writing }: Props) {
           {writing.map((item, i) => {
             const num = String(i + 1).padStart(2, "0");
             return (
-              <Link
+              <motion.div
                 key={item.slug}
-                href={`/writing/${item.slug}`}
-                className="group flex items-baseline gap-6 px-8 py-5 border-b-[0.5px] border-[var(--rule)] no-underline hover:bg-[var(--surface)] transition-colors duration-200"
+                initial={reduced ? false : { opacity: 0, x: -12 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.45, ease: EASE, delay: i * 0.08 }}
               >
-                <span className="meta-label w-8 shrink-0">{num}</span>
-                <span className="font-[family-name:var(--font-fraunces)] text-[20px] font-normal text-[var(--ink)] uppercase tracking-[-0.02em] flex-1 min-w-0 group-hover:italic transition-all duration-300">
-                  {item.frontmatter.title}
-                </span>
-                <span className="meta-label shrink-0">{item.readingTime}</span>
-              </Link>
+                <Link
+                  href={`/writing/${item.slug}`}
+                  className="group flex items-baseline gap-4 md:gap-6 px-6 md:px-8 py-5 border-b-[0.5px] border-[var(--rule)] no-underline hover:bg-[var(--surface)] active:bg-[var(--surface)] transition-colors duration-200"
+                >
+                  <span className="meta-label w-8 shrink-0">{num}</span>
+                  <span className="font-[family-name:var(--font-fraunces)] text-[18px] md:text-[20px] font-normal text-[var(--ink)] uppercase tracking-[-0.02em] flex-1 min-w-0">
+                    <span className="project-title">{item.frontmatter.title}</span>
+                  </span>
+                  <span className="meta-label shrink-0">{item.readingTime}</span>
+                </Link>
+              </motion.div>
             );
           })}
         </motion.section>
@@ -361,11 +376,11 @@ export function HomepageClient({ work, writing }: Props) {
 
       {/* ── CONTACT CTA ───────────────────────────────────── */}
       <motion.section
-        initial={reduced ? false : { opacity: 0, y: 24 }}
+        initial={reduced ? false : { opacity: 0, y: 48 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-10% 0px" }}
-        transition={{ duration: 0.7 }}
-        className="px-8 py-20 lg:px-20 lg:py-28"
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.85, ease: EASE }}
+        className="px-6 md:px-8 py-16 lg:px-20 lg:py-28"
         aria-labelledby="contact-heading"
       >
         <span className="meta-label text-[var(--accent)] block mb-6">LET&rsquo;S TALK</span>
@@ -383,20 +398,22 @@ export function HomepageClient({ work, writing }: Props) {
           conversations. I reply to every email that deserves one.
         </p>
         <div className="flex flex-wrap gap-4">
-          <a
+          <motion.a
             href="mailto:ivaturisaikiran@gmail.com"
+            whileTap={{ scale: 0.96 }}
             className="meta-label bg-[var(--accent)] text-[var(--canvas)] px-8 py-4 no-underline hover:brightness-110 transition-all duration-300"
           >
             SEND MESSAGE ↗
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="https://www.linkedin.com/in/saikiran-ivaturi/"
             target="_blank"
             rel="noopener noreferrer"
+            whileTap={{ scale: 0.96 }}
             className="meta-label border-[0.5px] border-[var(--rule)] px-8 py-4 no-underline hover:bg-[var(--surface)] transition-all duration-300"
           >
             LINKEDIN ↗
-          </a>
+          </motion.a>
         </div>
       </motion.section>
     </div>

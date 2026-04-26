@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
 function LiveDot() {
   return (
     <span className="relative flex h-[6px] w-[6px] shrink-0" aria-hidden="true">
@@ -34,10 +36,10 @@ export function AboutClient() {
     <div className="pt-20">
       {/* ── HERO ─────────────────────────────────────────── */}
       <motion.header
-        initial={reduced ? false : { opacity: 0, y: 20 }}
+        initial={reduced ? false : { opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="px-8 pt-16 pb-12 border-b-[0.5px] border-[var(--rule)] flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
+        transition={{ duration: 0.85, ease: EASE }}
+        className="px-6 md:px-8 pt-12 md:pt-16 pb-10 md:pb-12 border-b-[0.5px] border-[var(--rule)] flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
       >
         <h1
           className="font-[family-name:var(--font-fraunces)] font-normal uppercase tracking-[-0.04em] leading-[0.88] text-[var(--ink)]"
@@ -63,13 +65,13 @@ export function AboutClient() {
 
       {/* ── MANIFESTO + DATA ────────────────────────────── */}
       <motion.section
-        initial={reduced ? false : { opacity: 0, y: 24 }}
+        initial={reduced ? false : { opacity: 0, y: 48 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.1 }}
+        transition={{ duration: 0.9, delay: 0.12, ease: EASE }}
         className="grid md:grid-cols-12 border-b-[0.5px] border-[var(--rule)]"
       >
         {/* Data panel */}
-        <div className="md:col-span-4 p-10 lg:p-16 flex flex-col justify-between border-b-[0.5px] md:border-b-0 md:border-r-[0.5px] border-[var(--rule)] bg-[var(--surface)] min-h-[420px]">
+        <div className="md:col-span-4 p-8 lg:p-16 flex flex-col justify-between border-b-[0.5px] md:border-b-0 md:border-r-[0.5px] border-[var(--rule)] bg-[var(--surface)]">
           <div className="flex items-center gap-3 meta-label text-[var(--accent)]">
             <LiveDot />
             STATUS: AVAILABLE
@@ -96,7 +98,7 @@ export function AboutClient() {
         </div>
 
         {/* Intro text */}
-        <div className="md:col-span-8 p-10 lg:p-20 bg-[var(--canvas)]">
+        <div className="md:col-span-8 p-8 lg:p-20 bg-[var(--canvas)]">
           <p
             className="font-[family-name:var(--font-fraunces)] font-normal text-[var(--ink)] leading-[1.2] tracking-[-0.02em] mb-10"
             style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.8rem)" }}
@@ -123,42 +125,46 @@ export function AboutClient() {
 
       {/* ── EXPERIENCE ──────────────────────────────────── */}
       <motion.section
-        initial={reduced ? false : { opacity: 0, y: 24 }}
+        initial={reduced ? false : { opacity: 0, y: 48 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-8% 0px" }}
-        transition={{ duration: 0.65 }}
+        viewport={{ once: true, amount: 0.08 }}
+        transition={{ duration: 0.8, ease: EASE }}
         aria-labelledby="exp-heading"
       >
         <div className="px-8 py-6 border-b-[0.5px] border-[var(--rule)]">
           <span id="exp-heading" className="meta-label">EXPERIENCE</span>
         </div>
-        {EXPERIENCE.map((job) => (
-          <div
+        {EXPERIENCE.map((job, i) => (
+          <motion.div
             key={job.company}
+            initial={reduced ? false : { opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.65, ease: EASE, delay: i * 0.12 }}
             className="grid md:grid-cols-12 border-b-[0.5px] border-[var(--rule)]"
           >
-            <div className="md:col-span-4 p-8 lg:p-12 border-b-[0.5px] md:border-b-0 md:border-r-[0.5px] border-[var(--rule)] bg-[var(--surface)]">
+            <div className="md:col-span-4 p-6 md:p-8 lg:p-12 border-b-[0.5px] md:border-b-0 md:border-r-[0.5px] border-[var(--rule)] bg-[var(--surface)]">
               <p className="meta-label text-[var(--accent)] mb-3">{job.period}</p>
               <p className="font-[family-name:var(--font-fraunces)] text-[20px] font-normal text-[var(--ink)] mb-1">
                 {job.company}
               </p>
               <p className="meta-label">{job.role}</p>
             </div>
-            <div className="md:col-span-8 p-8 lg:p-12">
+            <div className="md:col-span-8 p-6 md:p-8 lg:p-12">
               <p className="font-[family-name:var(--font-inter-tight)] text-[17px] text-[var(--ink-muted)] leading-relaxed font-light">
                 {job.body}
               </p>
             </div>
-          </div>
+          </motion.div>
         ))}
       </motion.section>
 
       {/* ── STACK ────────────────────────────────────────── */}
       <motion.section
-        initial={reduced ? false : { opacity: 0, y: 24 }}
+        initial={reduced ? false : { opacity: 0, y: 48 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-8% 0px" }}
-        transition={{ duration: 0.65 }}
+        viewport={{ once: true, amount: 0.08 }}
+        transition={{ duration: 0.8, ease: EASE }}
         className="border-b-[0.5px] border-[var(--rule)]"
         aria-labelledby="stack-heading"
       >
@@ -172,8 +178,12 @@ export function AboutClient() {
             { label: "TOOLING",    items: ["Vite", "Vitest", "Playwright", "Framer Motion"] },
             { label: "PRACTICES",  items: ["OIDC / OAuth2", "WCAG Accessibility", "Perf. optimisation", "CI / CD"] },
           ].map((group, i) => (
-            <div
+            <motion.div
               key={group.label}
+              initial={reduced ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.55, ease: EASE, delay: i * 0.1 }}
               className={[
                 "p-8 border-b-[0.5px] border-[var(--rule)]",
                 i < 3 ? "md:border-r-[0.5px]" : "",
@@ -187,17 +197,17 @@ export function AboutClient() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
         </div>
       </motion.section>
 
       {/* ── CONTACT ──────────────────────────────────────── */}
       <motion.section
-        initial={reduced ? false : { opacity: 0, y: 24 }}
+        initial={reduced ? false : { opacity: 0, y: 48 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-8% 0px" }}
-        transition={{ duration: 0.65 }}
+        viewport={{ once: true, amount: 0.08 }}
+        transition={{ duration: 0.8, ease: EASE }}
         className="px-8 py-16 lg:px-16 lg:py-24"
         aria-labelledby="contact-heading"
       >

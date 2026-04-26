@@ -4,8 +4,8 @@ import { getAllWork } from "@/lib/content";
 import { WorkListClient } from "./WorkListClient";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Work",
-  description: "Selected case studies from Saikiran — React and TypeScript projects in healthcare and finance.",
+  title: "Recent Work",
+  description: "Latest projects from Saikiran — enterprise software in healthcare and personal tools.",
   path: "/work",
 });
 

@@ -1,0 +1,39 @@
+---
+title: "JSONCraft"
+description: "A browser-based JSON toolkit — format, validate, diff, and explore JSON without leaving the tab."
+lede: "I built JSONCraft as a tool I wanted to exist: a fast, keyboard-first JSON workbench that runs entirely in the browser. No servers, no accounts, no telemetry."
+role: "Solo — Design & Engineering"
+timeframe: "2026"
+stack: "TypeScript · React · Monaco Editor · Vite"
+year: 2026
+order: 3
+outcomes:
+  - "Format, minify, and validate JSON in real time with Monaco-powered editing"
+  - "Side-by-side diff view that highlights structural changes between two documents"
+  - "Collapsible tree explorer for deep JSON navigation without scrolling"
+  - "Cmd+K command palette for power users — zero mouse, full feature access"
+---
+
+## Why I built it
+
+Every dev tool I used for JSON either required an account, phoned home, or was a 2007-era webpage that hurt to look at. JSONCraft is the tool I kept wishing existed — fast, offline-capable, keyboard-first.
+
+## What it does
+
+Four core workflows, each accessible from the command palette:
+
+**Format & Minify** — Paste in any valid JSON and get it formatted or minified instantly. Monaco handles syntax highlighting and inline error markers.
+
+**Live Validation** — Errors surface as you type with line-level markers, not just a toast at the end.
+
+**Side-by-side Diff** — Two panels, one comparison. Structural differences are highlighted at the property level, not just line-level text diffs.
+
+**Tree Explorer** — Collapsible tree view for deeply nested documents. Navigate without losing context.
+
+## Technical decisions
+
+I chose Monaco Editor over CodeMirror because I wanted the same editing experience as VS Code — that familiarity removes friction for the target user (other developers). The diffing is done with a custom structural comparator rather than a text diff library, which gives more meaningful output for JSON specifically.
+
+The entire app is client-side. No API calls, no session storage of sensitive data, no third-party analytics.
+
+[Open JSONCraft ↗](https://jsoncraft.in/)

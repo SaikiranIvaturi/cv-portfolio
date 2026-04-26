@@ -4,28 +4,37 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motio
 
 type CursorMode = "hidden" | "default" | "link" | "work";
 
-const SPRING = { stiffness: 420, damping: 38, mass: 0.25 };
+// Fast spring for the small dot — feels immediate
+const DOT_SPRING   = { stiffness: 600, damping: 40, mass: 0.1 };
+// Slower spring for the ring — trails behind, creates depth
+const RING_SPRING  = { stiffness: 180, damping: 28, mass: 0.5 };
+
+const RING_SIZE: Record<CursorMode, number> = {
+  hidden:  28,
+  default: 28,
+  link:    40,
+  work:    56,
+};
 
 const LABELS: Partial<Record<CursorMode, string>> = {
   work: "VIEW ↗",
-  link: "→",
-};
-
-const SIZE: Record<CursorMode, number> = {
-  hidden:  28,
-  default: 28,
-  link:    44,
-  work:    64,
+  link: "OPEN →",
 };
 
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
   const [mode, setMode]       = useState<CursorMode>("hidden");
 
-  const x = useMotionValue(-300);
-  const y = useMotionValue(-300);
-  const sx = useSpring(x, SPRING);
-  const sy = useSpring(y, SPRING);
+  const mx = useMotionValue(-300);
+  const my = useMotionValue(-300);
+
+  // Dot follows cursor tightly
+  const dx = useSpring(mx, DOT_SPRING);
+  const dy = useSpring(my, DOT_SPRING);
+
+  // Ring lags behind for a parallax depth feel
+  const rx = useSpring(mx, RING_SPRING);
+  const ry = useSpring(my, RING_SPRING);
 
   useEffect(() => {
     if (!window.matchMedia("(hover: hover)").matches) return;
@@ -33,17 +42,17 @@ export function CustomCursor() {
     document.documentElement.classList.add("cursor-custom");
 
     const onMove = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
+      mx.set(e.clientX);
+      my.set(e.clientY);
       const t = e.target as HTMLElement;
-      if      (t.closest('[data-cursor="work"]'))                           setMode("work");
+      if      (t.closest('[data-cursor="work"]'))                                    setMode("work");
       else if (t.closest('a, button, [role="button"], label, [data-cursor="link"]')) setMode("link");
-      else                                                                   setMode("default");
+      else                                                                            setMode("default");
     };
-    const onLeave  = () => setMode("hidden");
-    const onEnter  = () => setMode(m => m === "hidden" ? "default" : m);
+    const onLeave = () => setMode("hidden");
+    const onEnter = () => setMode(m => m === "hidden" ? "default" : m);
 
-    window.addEventListener("mousemove",    onMove,   { passive: true });
+    window.addEventListener("mousemove",    onMove,  { passive: true });
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
     return () => {
@@ -52,41 +61,66 @@ export function CustomCursor() {
       document.removeEventListener("mouseenter", onEnter);
       document.documentElement.classList.remove("cursor-custom");
     };
-  }, [x, y]);
+  }, [mx, my]);
 
   if (!enabled) return null;
 
-  const size    = SIZE[mode];
-  const visible = mode !== "hidden";
-  const label   = LABELS[mode];
+  const visible   = mode !== "hidden";
+  const ringSize  = RING_SIZE[mode];
+  const showRing  = mode === "link" || mode === "work";
+  const label     = LABELS[mode];
 
   return (
     <>
-      {/* ── Subtle Simple Dot Cursor ── */}
+      {/* ── Dot — small, sharp, precise ── */}
       <motion.div
         aria-hidden="true"
-        className="fixed top-0 left-0 pointer-events-none z-[9999] subtle-dot-cursor"
-        style={{ x: sx, y: sy, translateX: "-50%", translateY: "-50%" }}
-        animate={{ opacity: visible ? 0.7 : 0 }}
-        transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
+        className="fixed top-0 left-0 pointer-events-none z-[9999] cursor-dot"
+        style={{ x: dx, y: dy, translateX: "-50%", translateY: "-50%" }}
+        animate={{ opacity: visible ? 1 : 0, scale: mode === "work" ? 1.6 : 1 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
       />
 
-      {/* ── Context label ── */}
+      {/* ── Ring — appears on interactive elements, slower spring ── */}
+      <AnimatePresence>
+        {showRing && (
+          <motion.div
+            key="ring"
+            aria-hidden="true"
+            className="fixed top-0 left-0 pointer-events-none z-[9998] cursor-ring"
+            style={{
+              x: rx,
+              y: ry,
+              translateX: "-50%",
+              translateY: "-50%",
+              width:  ringSize,
+              height: ringSize,
+              opacity: 0.45,
+            }}
+            initial={{ scale: 0.4, opacity: 0 }}
+            animate={{ scale: 1,   opacity: 0.45 }}
+            exit={{ scale: 0.4,    opacity: 0 }}
+            transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Label — "VIEW ↗" or "OPEN →" ── */}
       <AnimatePresence>
         {label && (
           <motion.div
             key={label}
             aria-hidden="true"
             className="fixed top-0 left-0 pointer-events-none z-[9999]"
-            style={{ x: sx, y: sy }}
-            initial={{ opacity: 0, x: sx, y: sy }}
+            style={{ x: rx, y: ry }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.12 }}
+            transition={{ duration: 0.15 }}
           >
             <span
               className="absolute meta-label text-[var(--accent)] whitespace-nowrap"
-              style={{ left: size / 2 + 10, top: -(size / 4) }}
+              style={{ left: ringSize / 2 + 8, top: -(ringSize / 4) }}
             >
               {label}
             </span>
