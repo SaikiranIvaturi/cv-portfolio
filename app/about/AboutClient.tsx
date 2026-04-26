@@ -82,7 +82,7 @@ export function AboutClient() {
               ["ROLE",     "ENG. II"],
               ["STACK",    "REACT / TS"],
               ["EXP.",     "5 YRS"],
-              ["OPEN TO",  "REMOTE"],
+              ["OPEN TO",  "SWE / REMOTE"],
             ].map(([label, value]) => (
               <div
                 key={label}
