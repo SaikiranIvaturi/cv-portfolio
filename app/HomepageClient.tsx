@@ -67,28 +67,31 @@ export function HomepageClient({ work, writing }: Props) {
         initial={reduced || !shouldAnimate ? false : { opacity: 0 }}
         animate={show ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative min-h-[100svh] pt-20 px-6 md:px-8 flex flex-col justify-end pb-10 md:pb-12 border-b-[0.5px] border-[var(--rule)] overflow-hidden"
+        className="relative min-h-[50svh] md:min-h-[70svh] pt-20 px-6 md:px-8 flex flex-col justify-end pb-10 md:pb-12 border-b-[0.5px] border-[var(--rule)] overflow-hidden"
         aria-label="Introduction"
       >
-        {/* Background watermark */}
-        <span
+        {/* Background watermark — drops down on load */}
+        <motion.span
           aria-hidden="true"
-          className="absolute top-16 right-6 font-[family-name:var(--font-fraunces)] font-bold leading-none pointer-events-none select-none"
-          style={{ fontSize: "clamp(8rem, 25vw, 28rem)", color: "var(--ink)", opacity: 0.025 }}
+          className="absolute bottom-8 right-6 font-[family-name:var(--font-fraunces)] font-bold leading-none pointer-events-none select-none"
+          style={{ fontSize: "clamp(3.5rem, 11vw, 12rem)", color: "var(--ink)" }}
+          initial={reduced ? false : { opacity: 0, y: -500 }}
+          animate={mounted ? { opacity: 0.03, y: 0 } : { opacity: 0, y: -500 }}
+          transition={{ duration: 2.8, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
         >
           FE
-        </span>
+        </motion.span>
 
         {/* Status badge */}
         <div className="absolute top-28 right-6 md:right-8 flex flex-col items-end gap-2">
-          <span className="meta-label opacity-40">SYS.REQ</span>
+          <span className="meta-label opacity-60">SYS.REQ</span>
           <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
         </div>
 
         {/* Meta bar */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b-[0.5px] border-[var(--rule)] pb-4 mb-6">
           <span className="meta-label">FRONTEND ENGINEER // DELHI</span>
-          <span className="meta-label opacity-40 mt-2 sm:mt-0">28.6139° N, 77.2090° E</span>
+          <span className="meta-label opacity-60 mt-2 sm:mt-0">28.6139° N, 77.2090° E</span>
         </div>
 
         {/* Name */}
@@ -144,7 +147,7 @@ export function HomepageClient({ work, writing }: Props) {
 
           <Link
             href="/about"
-            className="mt-10 inline-block border-[0.5px] border-[var(--rule)] px-8 py-3.5 meta-label no-underline hover:bg-[var(--accent)] hover:text-[var(--canvas)] hover:border-[var(--accent)] transition-all duration-400"
+            className="mt-10 inline-block border-[0.5px] border-[var(--rule)] px-8 py-3.5 btn-outline no-underline hover:bg-[var(--accent)] hover:text-white hover:border-[var(--accent)] transition-all duration-300"
           >
             FULL PROFILE →
           </Link>
@@ -154,16 +157,22 @@ export function HomepageClient({ work, writing }: Props) {
         <div className="md:col-span-4 p-8 lg:p-10 bg-[var(--surface)] flex flex-col justify-between gap-10">
           {/* Avatar */}
           <div className="flex items-center gap-4">
-            <Image
-              src="/images/avatar.jpeg"
-              alt="Saikiran Ivaturi"
-              width={64}
-              height={64}
-              className="rounded-none ring-[0.5px] ring-[var(--rule)] grayscale shrink-0"
-            />
+            <div className="group relative photo-wrap overflow-hidden shrink-0 w-[88px] h-[88px]">
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 z-10 pointer-events-none border border-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              />
+              <Image
+                src="/images/avatar.jpeg"
+                alt="Saikiran Ivaturi"
+                width={88}
+                height={88}
+                className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 scale-100 group-hover:scale-[1.05] transition-all duration-700 ease-out"
+              />
+            </div>
             <div>
               <p className="meta-label text-[var(--accent)] mb-0.5">SAIKIRAN IVATURI</p>
-              <p className="meta-label opacity-50">DELHI, INDIA</p>
+              <p className="meta-label opacity-70">DELHI, INDIA</p>
             </div>
           </div>
 
@@ -171,7 +180,7 @@ export function HomepageClient({ work, writing }: Props) {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3 meta-label text-[var(--accent)] pb-4 border-b-[0.5px] border-[var(--rule)]">
               <LiveDot />
-              AVAILABLE FOR WORK
+              OPEN TO NEW ROLES
             </div>
             {[
               ["ROLE",   "SOFTWARE ENGINEER II"],
@@ -223,6 +232,38 @@ export function HomepageClient({ work, writing }: Props) {
           ))}
         </div>
       </motion.section>
+
+      {/* ── SKILLS MARQUEE ───────────────────────────────── */}
+      <div
+        className="marquee-track border-b-[0.5px] border-[var(--rule)] overflow-hidden py-3 select-none"
+        aria-hidden="true"
+      >
+        <div className="animate-marquee flex items-center gap-0 whitespace-nowrap">
+          {[
+            "REACT", "TYPESCRIPT", "NEXT.JS", "REDUX TOOLKIT", "VITE",
+            "REACT QUERY", "FRAMER MOTION", "TAILWIND CSS", "VITEST",
+            "PLAYWRIGHT", "OIDC / OAUTH2", "FIGMA", "GIT", "OKTA",
+            "REACT", "TYPESCRIPT", "NEXT.JS", "REDUX TOOLKIT", "VITE",
+            "REACT QUERY", "FRAMER MOTION", "TAILWIND CSS", "VITEST",
+            "PLAYWRIGHT", "OIDC / OAUTH2", "FIGMA", "GIT", "OKTA",
+          ].map((skill, i) => (
+            <span key={i} className="flex items-center">
+              <span
+                className="font-[family-name:var(--font-jetbrains-mono)] text-[12px] font-semibold tracking-[0.14em] uppercase"
+                style={{ color: "var(--ink-muted)" }}
+              >
+                {skill}
+              </span>
+              <span
+                className="mx-6 text-[var(--accent)]"
+                style={{ opacity: 0.5, fontSize: "9px" }}
+              >
+                ✦
+              </span>
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ── WORK PREVIEW ─────────────────────────────────── */}
       <motion.section
@@ -324,9 +365,9 @@ export function HomepageClient({ work, writing }: Props) {
           className="font-[family-name:var(--font-fraunces)] font-normal leading-[0.85] tracking-[-0.04em] uppercase text-[var(--ink)] mb-12"
           style={{ fontSize: "clamp(3rem, 10vw, 10rem)" }}
         >
-          AVAILABLE
+          OPEN TO
           <br />
-          <span className="italic text-[var(--accent)]">NOW.</span>
+          <span className="italic text-[var(--accent)]">NEW ROLES</span>
         </h2>
         <p className="font-[family-name:var(--font-inter-tight)] text-[18px] text-[var(--ink-muted)] max-w-[500px] leading-relaxed mb-12 font-light">
           Open to software engineer roles — remote or hybrid. Contract
@@ -336,7 +377,7 @@ export function HomepageClient({ work, writing }: Props) {
           <motion.a
             href="mailto:ivaturisaikiran@gmail.com"
             whileTap={{ scale: 0.96 }}
-            className="meta-label bg-[var(--accent)] text-[var(--canvas)] px-8 py-4 no-underline hover:brightness-110 transition-all duration-300"
+            className="btn-primary bg-[var(--accent)] px-8 py-4 no-underline hover:brightness-110 transition-all duration-300"
           >
             SEND MESSAGE ↗
           </motion.a>
@@ -345,7 +386,7 @@ export function HomepageClient({ work, writing }: Props) {
             target="_blank"
             rel="noopener noreferrer"
             whileTap={{ scale: 0.96 }}
-            className="meta-label border-[0.5px] border-[var(--rule)] px-8 py-4 no-underline hover:bg-[var(--surface)] transition-all duration-300"
+            className="btn-outline border-[0.5px] border-[var(--rule)] px-8 py-4 no-underline hover:bg-[var(--surface)] transition-all duration-300"
           >
             LINKEDIN ↗
           </motion.a>

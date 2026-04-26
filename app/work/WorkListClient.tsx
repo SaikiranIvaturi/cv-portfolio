@@ -58,7 +58,7 @@ function WorkRow({
               PERSONAL
             </span>
           )}
-          <span className="meta-label ml-auto">{post.frontmatter.year}</span>
+          <span className="meta-label ml-auto opacity-70">{post.frontmatter.year}</span>
         </div>
 
         {/* Title — the headline */}
@@ -77,8 +77,8 @@ function WorkRow({
         {/* Bottom row: role + stack + cta */}
         <div className="flex items-end justify-between gap-4 relative">
           <div className="flex flex-col gap-1">
-            <span className="meta-label opacity-40">{post.frontmatter.role}</span>
-            <span className="meta-label opacity-25">{post.frontmatter.stack}</span>
+            <span className="meta-label opacity-70">{post.frontmatter.role}</span>
+            <span className="meta-label opacity-50">{post.frontmatter.stack}</span>
           </div>
           <span
             className="meta-label text-[var(--accent)] shrink-0 opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
@@ -115,7 +115,7 @@ export function WorkListClient({ work }: { work: WorkPost[] }) {
         >
           RECENT
           <br />
-          <span className="italic text-[var(--accent)]">WORK.</span>
+          <span className="italic text-[var(--accent)]">WORK</span>
         </h1>
 
         <div className="flex flex-col items-start sm:items-end gap-2 sm:pb-2 shrink-0">

@@ -48,14 +48,21 @@ export function AboutClient() {
           ABOUT
         </h1>
         <div className="flex items-end gap-5 pb-1">
-          <Image
-            src="/images/avatar.jpeg"
-            alt="Saikiran Ivaturi"
-            width={72}
-            height={72}
-            className="rounded-none ring-[0.5px] ring-[var(--rule)] grayscale"
-            priority
-          />
+          <div className="group relative photo-wrap overflow-hidden shrink-0 w-[220px] h-[260px]">
+            {/* Accent border overlay */}
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 z-10 pointer-events-none border border-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            />
+            <Image
+              src="/images/avatar.jpeg"
+              alt="Saikiran Ivaturi"
+              width={220}
+              height={260}
+              className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 scale-100 group-hover:scale-[1.05] transition-all duration-700 ease-out"
+              priority
+            />
+          </div>
           <div>
             <p className="meta-label text-[var(--accent)] mb-1">SAIKIRAN IVATURI</p>
             <p className="meta-label">FRONTEND ENGINEER — DELHI</p>
@@ -74,7 +81,7 @@ export function AboutClient() {
         <div className="md:col-span-4 p-8 lg:p-16 flex flex-col justify-between border-b-[0.5px] md:border-b-0 md:border-r-[0.5px] border-[var(--rule)] bg-[var(--surface)]">
           <div className="flex items-center gap-3 meta-label text-[var(--accent)]">
             <LiveDot />
-            STATUS: AVAILABLE
+            OPEN TO NEW ROLES
           </div>
           <div className="flex flex-col gap-5 mt-10">
             {[
@@ -219,12 +226,12 @@ export function AboutClient() {
         >
           LET&rsquo;S
           <br />
-          <span className="italic text-[var(--accent)]">TALK.</span>
+          <span className="italic text-[var(--accent)]">TALK</span>
         </h2>
         <div className="flex flex-wrap gap-4">
           <a
             href="mailto:ivaturisaikiran@gmail.com"
-            className="meta-label bg-[var(--accent)] text-[var(--canvas)] px-8 py-4 no-underline hover:brightness-110 transition-all duration-300"
+            className="btn-primary bg-[var(--accent)] px-8 py-4 no-underline hover:brightness-110 transition-all duration-300"
           >
             SEND EMAIL ↗
           </a>
@@ -232,7 +239,7 @@ export function AboutClient() {
             href="https://www.linkedin.com/in/saikiran-ivaturi/"
             target="_blank"
             rel="noopener noreferrer"
-            className="meta-label border-[0.5px] border-[var(--rule)] px-8 py-4 no-underline hover:bg-[var(--surface)] transition-all duration-300"
+            className="btn-outline border-[0.5px] border-[var(--rule)] px-8 py-4 no-underline hover:bg-[var(--surface)] transition-all duration-300"
           >
             LINKEDIN ↗
           </a>
@@ -240,7 +247,7 @@ export function AboutClient() {
             href="https://github.com/SaikiranIvaturi"
             target="_blank"
             rel="noopener noreferrer"
-            className="meta-label border-[0.5px] border-[var(--rule)] px-8 py-4 no-underline hover:bg-[var(--surface)] transition-all duration-300"
+            className="btn-outline border-[0.5px] border-[var(--rule)] px-8 py-4 no-underline hover:bg-[var(--surface)] transition-all duration-300"
           >
             GITHUB ↗
           </a>

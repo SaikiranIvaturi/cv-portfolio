@@ -21,9 +21,9 @@
   --canvas:       #F7F4EE;
   --surface:      #FFFFFF;
   --ink:          #141414;
-  --ink-muted:    #666666;
-  --ink-subtle:   #AAAAAA;
-  --rule:         rgba(0, 0, 0, 0.1);
+  --ink-muted:    #555555;
+  --ink-subtle:   #888888;
+  --rule:         rgba(0, 0, 0, 0.12);
   --accent:       #7A6340;
   --accent-soft:  #EDE8DA;
 }
@@ -32,10 +32,10 @@
 .dark {
   --canvas:       #080808;
   --surface:      #121212;
-  --ink:          #E5E5E5;
-  --ink-muted:    #888888;
-  --ink-subtle:   #555555;
-  --rule:         rgba(255, 255, 255, 0.1);
+  --ink:          #E8E8E8;
+  --ink-muted:    #AAAAAA;
+  --ink-subtle:   #777777;
+  --rule:         rgba(255, 255, 255, 0.12);
   --accent:       #9C845D;
   --accent-soft:  #1C1812;
 }
@@ -52,7 +52,7 @@ html {
 
 body {
   font-family: var(--font-inter-tight, "Inter Tight", system-ui, sans-serif);
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.65;
   background-color: var(--canvas);
   color: var(--ink);
@@ -82,9 +82,10 @@ body::before {
 /* ─── Meta label — the core typographic utility ─── */
 .meta-label {
   font-family: var(--font-jetbrains-mono, "JetBrains Mono", monospace);
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.14em;
   line-height: 1;
   color: var(--ink-subtle);
 }
@@ -225,6 +226,49 @@ kbd {
 }
 .marquee-track:hover .animate-marquee {
   animation-play-state: paused;
+}
+
+/* ─── CTA buttons — filled and outlined ─── */
+.btn-primary {
+  font-family: var(--font-jetbrains-mono, "JetBrains Mono", monospace);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+.btn-outline {
+  font-family: var(--font-jetbrains-mono, "JetBrains Mono", monospace);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+
+/* ─── Photo hover — shine sweep ─── */
+.photo-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.09) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+  z-index: 10;
+  transition: none;
+}
+.group:hover .photo-wrap::after {
+  transform: translateX(120%);
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ─── Text selection ─── */

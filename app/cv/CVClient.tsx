@@ -80,7 +80,7 @@ export function CVClient() {
             variants={item}
             className="font-[family-name:var(--font-fraunces)] text-[32px] font-normal tracking-[-0.02em] text-[var(--ink)] mb-2"
           >
-            Saikiran
+            Saikiran Ivaturi
           </motion.h1>
           <motion.p
             variants={item}

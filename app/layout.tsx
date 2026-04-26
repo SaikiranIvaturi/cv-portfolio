@@ -6,7 +6,6 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { CustomCursor } from "@/components/CustomCursor";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import { CommandMenu } from "@/components/CommandMenu";
 import { EasterEgg } from "@/components/EasterEgg";
 import { CursorTrail } from "@/components/CursorTrail";
 
@@ -131,7 +130,6 @@ export default function RootLayout({
         <Footer />
         <CustomCursor />
         <CursorTrail />
-        <CommandMenu />
         <EasterEgg />
       </body>
     </html>

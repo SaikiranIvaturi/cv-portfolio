@@ -102,16 +102,8 @@ export function Nav() {
         {/* Right: clock + actions + hamburger */}
         <div className="flex items-center gap-4 md:gap-6">
           <span className="hidden lg:block meta-label tabular-nums">
-            <LiveClock /> // AVAILABLE
+            <LiveClock /> // OPEN TO NEW ROLES
           </span>
-
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent("cmd-menu-open"))}
-            aria-label="Open command menu"
-            className="hidden md:block meta-label border-[0.5px] border-[var(--rule)] px-3 py-2 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors duration-200"
-          >
-            ⌘K
-          </button>
 
           <ThemeToggle />
 
@@ -188,9 +180,9 @@ export function Nav() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-60" />
               <span className="relative inline-flex rounded-full h-[6px] w-[6px] bg-[var(--accent)]" />
             </span>
-            <span className="meta-label text-[var(--accent)]">AVAILABLE</span>
+            <span className="meta-label text-[var(--accent)]">OPEN TO NEW ROLES</span>
           </div>
-          <span className="meta-label tabular-nums opacity-50">
+          <span className="meta-label tabular-nums opacity-70">
             <LiveClock />
           </span>
         </div>
